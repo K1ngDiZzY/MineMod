@@ -1,0 +1,71 @@
+# Java build / files
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Build folders
+/target/
+/build/
+/out/
+/bin/
+/dist/
+/tmp/
+
+# Gradle
+/.gradle/
+/gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+dependency-reduced-pom.xml
+release.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+# IDEs
+/.idea/
+/*.iml
+*.iws
+/.settings/
+/.classpath
+.project
+nbproject/private/
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs, DBs, temp
+*.log
+hs_err_pid*
+*.sql
+*.sqlite
+*.db
+*.h2.db
+
+# Archives / packages
+*.7z
+*.gz
+
+# Test / coverage
+/coverage/
+/*.lcov
+
+# Sensitive / environment
+.env
+*.keystore
+
+# GitHub Copilot related (ignore Copilot state/config files)
+.copilot/
+.copilot-*
+copilot.*
+.copilotrc
+.github/copilot/
+.github/copilot-*
