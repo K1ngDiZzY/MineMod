@@ -1,24 +1,71 @@
-# Compiled class file
+# Java build / files
 *.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
 *.jar
 *.war
-*.nar
 *.ear
+*.nar
 *.zip
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Build folders
+/target/
+/build/
+/out/
+/bin/
+/dist/
+/tmp/
+
+# Gradle
+/.gradle/
+/gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+dependency-reduced-pom.xml
+release.properties
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+
+# IDEs
+/.idea/
+/*.iml
+*.iws
+/.settings/
+/.classpath
+.project
+nbproject/private/
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs, DBs, temp
+*.log
 hs_err_pid*
-replay_pid*
+*.sql
+*.sqlite
+*.db
+*.h2.db
+
+# Archives / packages
+*.7z
+*.gz
+
+# Test / coverage
+/coverage/
+/*.lcov
+
+# Sensitive / environment
+.env
+*.keystore
+
+# GitHub Copilot related (ignore Copilot state/config files)
+.copilot/
+.copilot-*
+copilot.*
+.copilotrc
+.github/copilot/
+.github/copilot-*
