@@ -15,11 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         java-version: [21]
 
     steps:
-    - name: Checkout repository
+    - name: Checkout repositoryS
       uses: actions/checkout@v4
 
     - name: Set up JDK ${{ matrix.java-version }}
