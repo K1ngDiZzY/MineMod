@@ -32,6 +32,21 @@ cd MineMod
 
 The built mod JAR will be available in `build/libs/`.
 
+### Local Setup Verification
+
+Before pushing changes, you can verify your local setup:
+
+```bash
+./scripts/verify-local-setup.sh
+```
+
+This script checks:
+- Java 21 installation
+- Gradle wrapper configuration
+- Build compilation
+- Test execution
+- CI/CD workflow syntax
+
 ### Development Setup
 
 For Eclipse:
