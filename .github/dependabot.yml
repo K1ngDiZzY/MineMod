@@ -1,0 +1,38 @@
+version: 2
+updates:
+  # Enable version updates for Gradle
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "04:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "K1ngDiZzY"
+    assignees:
+      - "K1ngDiZzY"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+    labels:
+      - "dependencies"
+      - "gradle"
+
+  # Enable security updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday" 
+      time: "04:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "K1ngDiZzY"
+    assignees:
+      - "K1ngDiZzY"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "ci/cd"
+      - "github-actions"
