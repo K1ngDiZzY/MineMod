@@ -49,6 +49,7 @@ hs_err_pid*
 *.sqlite
 *.db
 *.h2.db
+*.dat
 
 # Archives / packages
 *.7z
