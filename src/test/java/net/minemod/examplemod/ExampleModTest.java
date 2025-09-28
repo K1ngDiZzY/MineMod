@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package net.minemod.examplemod;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +30,7 @@ public class ExampleModTest {
         // Test that the Config class exists and has basic functionality
         assertDoesNotThrow(() -> {
             // This will test that the Config class can be loaded
-            Class.forName("com.example.examplemod.Config");
+            Class.forName("net.minemod.examplemod.Config");
         }, "Config class should be loadable");
     }
 }
