@@ -69,7 +69,7 @@ For IntelliJ IDEA:
 
 This project uses GitHub Actions for continuous integration and deployment:
 
-- **CI**: Automatically builds and tests on Linux, Windows, and macOS
+- **CI**: Automatically builds and tests on Linux, Windows
 - **PR Validation**: Validates pull requests with build and test results
 - **CD**: Automatically creates releases when version tags are pushed
 - **Dependency Updates**: Dependabot keeps dependencies up to date
