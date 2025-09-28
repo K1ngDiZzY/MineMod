@@ -12,7 +12,7 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, ExampleMod.MODID);
 
-    //need to set ID for each object here. (should make a new Creative Tab for the Test Mod
+    // Need to set ID for each object here. (Should make a new Creative Tab for the Test Mod)
     public static final RegistryObject<Item> GUM_GUM_FRUIT = ITEMS.register("gumgumfruit",
             () -> new Item(new Item.Properties()
                     .food(ModFoodProperties.DEVIL_FRUIT, ModFoodProperties.DEVIL_FRUIT_CONSUMABLE)
