@@ -113,7 +113,11 @@ public final class ExampleMod {
 
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(ModBlocks.BERRY_ORE);
-            event.accept((ModItems.BERRY));
+            event.accept(ModItems.BERRY);
+        }
+
+        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(ModItems.GRUNT_SPAWN_EGG);
         }
     }
 

@@ -1,2 +1,10 @@
 /gamemode survival
 /gamemode creative
+/kill all
+/kill @a
+/kill @e
+/setworldspawn
+/kill @e
+/time set noon
+/gamerule
+/gamerule doDaylightCycle false

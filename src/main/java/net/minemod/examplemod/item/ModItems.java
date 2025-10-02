@@ -1,11 +1,14 @@
 package net.minemod.examplemod.item;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.common.*;
 import net.minemod.examplemod.ExampleMod;
+import net.minemod.examplemod.entity.ModEntities;
 
 public class ModItems {
     /* Deferred Register essentially tells Minecraft to "Create" the custom items */
@@ -22,6 +25,12 @@ public class ModItems {
             () -> new Item(new Item.Properties()
                     .food(ModFoodProperties.DEVIL_FRUIT, ModFoodProperties.DEVIL_FRUIT_CONSUMABLE)
                     .setId(ITEMS.key("flameflamefruit"))));
+
+
+    public static final RegistryObject<Item> GRUNT_SPAWN_EGG = ITEMS.register("grunt_spawn_egg",
+            () -> new SpawnEggItem(ModEntities.GRUNT.get(), new Item.Properties()
+                    .setId(ITEMS.key("grunt_spawn_egg"))));
+
 
 
     public static final RegistryObject<Item> BERRY = ITEMS.register("berry",
