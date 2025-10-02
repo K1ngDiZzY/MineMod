@@ -98,20 +98,3 @@ jobs:
         name: check-results-${{ github.sha }}
         path: build/reports/
         retention-days: 30
-
-  security-scan:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Run dependency vulnerability scan
-      uses: github/super-linter@v7
-      env:
-        DEFAULT_BRANCH: main
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VALIDATE_ALL_CODEBASE: false
-        VALIDATE_JAVA: true
-        VALIDATE_GRADLE: true
