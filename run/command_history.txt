@@ -1,1 +1,4 @@
 /gamemode survival
+/creative
+/creative mode
+/gamemode creative
