@@ -2,3 +2,6 @@
 /creative
 /creative mode
 /gamemode creative
+/time set noon
+/gamerule doDaylightCycle false
+/kill @e
