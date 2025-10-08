@@ -14,12 +14,11 @@ public abstract class AbstractNPCRenderer <T extends NPC, S extends HumanoidRend
 
     /**
      * Abstract NPC Renderer contains the RENDERING LOGIC including: NPC Model and NPC Texture.
-     * (TODO: Figure out if the Texture needs to be defined here or if it can be overridden in NPCRenderer)
      * */
+    /** This is where the model is passed to the Renderer. */
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/npc.png");
 
-    /** This is where the model is passed to the Renderer. */
     public AbstractNPCRenderer(EntityRendererProvider.Context context) {
         super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5f);
     }
