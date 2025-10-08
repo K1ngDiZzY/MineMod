@@ -89,7 +89,7 @@ This project is licensed under the LGPL 2.1 License - see the [LICENSE.txt](LICE
 ## 👥 Authors
 
 - **K1ngDiZzY** - *Initial work*
-- **DJohnson** - *Contributor*
+- **DJohnson** - *Contributor/Initial work*
 
 ---
 
