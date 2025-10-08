@@ -23,7 +23,9 @@ public abstract class AbstractNPCRenderer <T extends NPC, S extends HumanoidRend
         super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5f);
     }
 
-    /// This is where the texture is passed to the Renderer.
+    /**
+     * This is where the texture is passed to the Renderer.
+     */
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull S renderState) {
         return TEXTURE;
