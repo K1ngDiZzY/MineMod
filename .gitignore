@@ -16,6 +16,17 @@
 /dist/
 /tmp/
 
+# Run folders / run data
+/run/crash-reports/*
+/run/logs/*
+/run/downloads/*
+/run/mods/*
+/run/resourcepacks/*
+/run/saves/testing/*
+/run/saves/MineMod Testground/*
+
+
+
 # Gradle
 /.gradle/
 /gradle-app.setting
@@ -70,3 +81,5 @@ copilot.*
 .copilotrc
 .github/copilot/
 .github/copilot-*
+
+
