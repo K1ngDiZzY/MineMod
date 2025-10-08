@@ -16,6 +16,32 @@
 /dist/
 /tmp/
 
+# Run folders / run data
+/run/crash-reports/*
+/run/logs/*
+/run/downloads/*
+/run/mods/*
+/run/resourcepacks/*
+/run/saves/testing/*
+/run/saves/MineMod Testground/*
+/run/saves/MineMod Testground/
+/run/saves/MineMod Testground/advancements/*
+/run/saves/MineMod Testground/data/
+/run/saves/MineMod Testground/DIM1/
+/run/saves/MineMod Testground/DIM-1/
+/run/saves/MineMod Testground/entities/*
+/run/saves/MineMod Testground/entities/
+/run/saves/MineMod Testground/playerdata/*
+/run/saves/MineMod Testground/region/*
+/run/saves/MineMod Testground/level.dat
+/run/saves/MineMod Testground/level.dat_old
+/run/saves/MineMod Testground/stats/
+/run/saves/MineMod Testground/stats/*
+/run/saves/MineMod Testground/advancements/
+/run/saves/*
+
+
+
 # Gradle
 /.gradle/
 /gradle-app.setting
@@ -50,6 +76,8 @@ hs_err_pid*
 *.db
 *.h2.db
 *.dat
+*.mca
+*.data_old
 
 # Archives / packages
 *.7z
@@ -70,3 +98,6 @@ copilot.*
 .copilotrc
 .github/copilot/
 .github/copilot-*
+
+
+
