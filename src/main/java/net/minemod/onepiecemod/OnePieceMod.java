@@ -2,6 +2,7 @@ package net.minemod.onepiecemod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,6 +15,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minemod.onepiecemod.block.ModBlocks;
+import net.minemod.onepiecemod.client.NPCRenderer;
+import net.minemod.onepiecemod.entity.ModEntities;
 import net.minemod.onepiecemod.item.ModItems;
 import org.slf4j.Logger;
 
@@ -68,6 +71,7 @@ public final class OnePieceMod {
 
         ModItems.register(context);
         ModBlocks.register(context);
+        ModEntities.register(context);
 
         // Register the commonSetup method for modloading
         FMLCommonSetupEvent.getBus(modBusGroup).addListener(this::commonSetup);
@@ -107,7 +111,11 @@ public final class OnePieceMod {
 
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(ModBlocks.BERRY_ORE);
-            event.accept((ModItems.BERRY));
+            event.accept(ModItems.BERRY);
+        }
+
+        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(ModItems.NPC_SPAWN_EGG);
         }
     }
 
