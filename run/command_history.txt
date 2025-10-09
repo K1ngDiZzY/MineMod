@@ -5,3 +5,5 @@
 /time set noon
 /gamerule doDaylightCycle false
 /kill @e
+/gamerule doWeatherCycle false
+/weather clear

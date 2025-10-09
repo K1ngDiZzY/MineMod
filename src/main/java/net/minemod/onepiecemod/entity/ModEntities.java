@@ -10,7 +10,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.minemod.onepiecemod.OnePieceMod;
-import net.minemod.onepiecemod.entity.npc.NPC;
+import net.minemod.onepiecemod.entity.npcs.NPC;
+import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
+import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
 
 public class ModEntities {
     /** Deferred Register for Entities. (Any custom NPCs would be added here) */
@@ -25,6 +27,22 @@ public class ModEntities {
                             .build(ResourceKey.create(
                                     Registries.ENTITY_TYPE,
                                     ResourceLocation.parse("onepiecemod:npc"))));
+
+    public static final RegistryObject<EntityType<NavyNPC>> NAVY_NPC =
+            ENTITY_TYPES.register("navy_npc",
+                    () -> EntityType.Builder.of(NavyNPC::new, MobCategory.CREATURE)
+                            .sized(0.6f, 1.8f)
+                            .build(ResourceKey.create(
+                                    Registries.ENTITY_TYPE,
+                                    ResourceLocation.parse("onepiecemod:navy_npc"))));
+
+    public static final RegistryObject<EntityType<PirateNPC>> PIRATE_NPC =
+            ENTITY_TYPES.register("pirate_npc",
+                    () -> EntityType.Builder.of(PirateNPC::new, MobCategory.CREATURE)
+                            .sized(0.6f, 1.8f)
+                            .build(ResourceKey.create(
+                                    Registries.ENTITY_TYPE,
+                                    ResourceLocation.parse("onepiecemod:pirate_npc"))));
 
     public static void register(FMLJavaModLoadingContext context) {
         ENTITY_TYPES.register(context.getModBusGroup());
