@@ -17,7 +17,7 @@ public abstract class AbstractNavyNPCRenderer <T extends NavyNPC, S extends Huma
      * */
     /** This is where the model is passed to the Renderer. */
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/abstract_navy_npc.png");
+            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_v0.png");
 
     public AbstractNavyNPCRenderer(EntityRendererProvider.Context context) {
         super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5f);

@@ -14,7 +14,7 @@ public class NavyNPCRenderer extends AbstractNavyNPCRenderer<NavyNPC, HumanoidRe
      * This is where we can override the "AbstractNPC" Skin (I am using a Test dummy skin as a reference)
      * */
     private static final ResourceLocation TEXTURE =
-        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/abstract_navy_npc.png");
+        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_v0.png");
 
     public NavyNPCRenderer(EntityRendererProvider.Context context) {
         super(context);
