@@ -33,6 +33,12 @@ public class ModItems {
     public static final RegistryObject<Item> NPC_SPAWN_EGG = ITEMS.register("npc_spawn_egg",
             () -> new SpawnEggItem(ModEntities.NPC.get(), new Item.Properties().setId(ITEMS.key("npc_spawn_egg"))));
 
+    public static final RegistryObject<Item> NAVY_NPC_SPAWN_EGG = ITEMS.register("navy_npc_spawn_egg",
+            () -> new SpawnEggItem(ModEntities.NAVY_NPC.get(), new Item.Properties().setId(ITEMS.key("navy_npc_spawn_egg"))));
+
+    public static final RegistryObject<Item> PIRATE_NPC_SPAWN_EGG = ITEMS.register("pirate_npc_spawn_egg",
+            () -> new SpawnEggItem(ModEntities.PIRATE_NPC.get(), new Item.Properties().setId(ITEMS.key("pirate_npc_spawn_egg"))));
+
 
     /* This is different from 1.20 and 1.21; Now in 1.21.8, the EventBus is condensed into one thing instead
      * of multiple different Event Busses to handle separate things. In order to get the BusGroup, you need to

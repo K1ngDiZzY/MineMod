@@ -5,5 +5,7 @@
   "item.onepiecemod.berry": "Berry",
   "item.onepiecemod.berry_ore": "Berry Ore",
 
-  "item.onepiecemod.npc_spawn_egg": "NPC Spawn Egg"
+  "item.onepiecemod.npc_spawn_egg": "NPC Spawn Egg",
+  "item.onepiecemod.navy_npc_spawn_egg": "Navy NPC Spawn Egg",
+  "item.onepiecemod.pirate_npc_spawn_egg": "Pirate NPC Spawn Egg"
 }
