@@ -1,5 +1,6 @@
 package net.minemod.onepiecemod.client;
 
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -18,9 +19,9 @@ public class ClientEventBusSubscriber {
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.PIRATE_NPC.get(), PirateNPCRenderer::new);
-        event.registerEntityRenderer(ModEntities.NAVY_NPC.get(), NavyNPCRenderer::new);
-        event.registerEntityRenderer(ModEntities.NPC.get(), NPCRenderer::new);
+        EntityRenderers.register(ModEntities.PIRATE_NPC.get(), PirateNPCRenderer::new);
+        EntityRenderers.register(ModEntities.NAVY_NPC.get(), NavyNPCRenderer::new);
+        EntityRenderers.register(ModEntities.NPC.get(), NPCRenderer::new);
     }
 
     @SubscribeEvent

@@ -1,13 +1,15 @@
 package net.minemod.onepiecemod.client.pirate;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.google.common.collect.Maps;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minemod.onepiecemod.OnePieceMod;
 import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.Random;
 
 public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, HumanoidRenderState> {
 
@@ -16,6 +18,21 @@ public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, Huma
      * This is where we can override the "AbstractNPC" Skin (I am using a Test dummy skin as a reference)
      *
      */
+    private static final Map<PirateVariant, ResourceLocation> LOCATION_BY_VARIANT =
+            Util.make(Maps.newEnumMap(PirateVariant.class), map -> {
+                map.put(PirateVariant.ZERO,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/pirate/pirate_npc_v0.png"));
+                map.put(PirateVariant.ONE,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v1.png"));
+                map.put(PirateVariant.TWO,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v2.png"));
+                map.put(PirateVariant.THREE,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v3.png"));
+                map.put(PirateVariant.FOUR,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v4.png"));
+            });
+
+    /*
     private static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
             ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/pirate/pirate_npc_v0.png"),
             ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v1.png"),
@@ -23,29 +40,28 @@ public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, Huma
             ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v3.png"),
             ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v4.png")
     };
-    private PirateNPC currentEntity;
-
+    */
     public PirateNPCRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public HumanoidRenderState createRenderState() {
-        return new HumanoidRenderState();
+    public PirateRenderState createRenderState() {
+        PirateRenderState renderState = new PirateRenderState();
+        PirateVariant[] variants = PirateVariant.values();
+        PirateVariant variant = variants[new Random().nextInt(variants.length)];
+        renderState.setVariant(variant);
+        return new PirateRenderState();
     }
 
-    // Helper to access the current entity
-    private PirateNPC getRenderedEntity() {
-        return this.currentEntity;
-    }
 
+    // TODO: FIX THIS METHOD: This method is called every tick, and is setting a random skin every tick
+    // We need to figure out how to get this setup with the individual entity
+    // The tutorial series passes (PirateNPC entity) as the parameter, but that doesn't work in 1.21.8 :/
     @Override
     public ResourceLocation getTextureLocation(HumanoidRenderState pRenderState) {
-        PirateNPC entity = getRenderedEntity();
-        if (entity != null) {
-            int variant = entity.getSkinVariant();
-            return TEXTURES[Math.max(0, Math.min(TEXTURES.length - 1, variant))];
-        }
-        return TEXTURES[0]; // fallback
+        PirateVariant[] variants = PirateVariant.values();
+        PirateVariant randomVariant = variants[new Random().nextInt(variants.length)];
+        return LOCATION_BY_VARIANT.get(randomVariant);
     }
 }

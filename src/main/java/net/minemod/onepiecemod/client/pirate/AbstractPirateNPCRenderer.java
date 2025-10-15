@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
+import net.minemod.onepiecemod.OnePieceMod;
 import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
 import org.jetbrains.annotations.NotNull;
 
