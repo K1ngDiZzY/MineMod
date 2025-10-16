@@ -12,7 +12,7 @@ import java.util.Map;
 public class NavyNPCRenderer extends AbstractNavyNPCRenderer<NavyNPC, NavyRenderState> {
 
     /**
-     * LOCATION_BY_VARIANT is a map of PirateVariants and ResourseLocations. This is how the getTextureLocation is able
+     * LOCATION_BY_VARIANT is a map of NavyVariants and ResourceLocations. This is how the getTextureLocation is able
      * to draw the correct ResourceLocation for the correct Variant.
      */
     private static final Map<NavyVariant, ResourceLocation> LOCATION_BY_VARIANT =
