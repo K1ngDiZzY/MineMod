@@ -9,3 +9,4 @@
 /weather clear
 /kill @e[name=
 /kill @e
+/enchant Dev minecraft:sharpness 5

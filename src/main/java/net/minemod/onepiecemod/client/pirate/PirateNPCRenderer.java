@@ -12,21 +12,21 @@ import java.util.Map;
 public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, PirateRenderState> {
 
     /**
-     * LOCATION_BY_VARIANT is a map of PirateVariants and ResourseLocations. This is how the getTextureLocation is able
+     * LOCATION_BY_VARIANT is a map of PirateVariants and ResourceLocations. This is how the getTextureLocation is able
      * to draw the correct ResourceLocation for the correct Variant.
      */
     private static final Map<PirateVariant, ResourceLocation> LOCATION_BY_VARIANT =
             Util.make(Maps.newEnumMap(PirateVariant.class), map -> {
-                map.put(PirateVariant.ZERO,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/pirate/pirate_npc_v0.png"));
-                map.put(PirateVariant.ONE,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v1.png"));
-                map.put(PirateVariant.TWO,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v2.png"));
-                map.put(PirateVariant.THREE,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v3.png"));
-                map.put(PirateVariant.FOUR,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v4.png"));
+                map.put(PirateVariant.DEFAULT,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_default.png"));
+                map.put(PirateVariant.FRANKY,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_franky.png"));
+                map.put(PirateVariant.SANJI,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_sanji.png"));
+                map.put(PirateVariant.LUFFY,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_luffy.png"));
+                map.put(PirateVariant.ZORO,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_zoro.png"));
             });
 
     public PirateNPCRenderer(EntityRendererProvider.Context context) {

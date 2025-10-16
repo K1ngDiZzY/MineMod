@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public enum NavyVariant {
-    ZERO(0),
-    ONE(1),
-    TWO(2),
-    THREE(3);
+    DEFAULT(0),
+    CADET(1),
+    AKAINU(2),
+    KOBY(3);
 
     private final int id;
     private static final NavyVariant[] BY_ID = Arrays.stream(values()).sorted(Comparator

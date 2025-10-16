@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public enum PirateVariant {
-    ZERO(0),
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4);
+    DEFAULT(0),
+    FRANKY(1),
+    SANJI(2),
+    LUFFY(3),
+    ZORO(4);
 
     private final int id;
     private static final PirateVariant[] BY_ID = Arrays.stream(values()).sorted(Comparator.

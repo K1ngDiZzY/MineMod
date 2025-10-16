@@ -34,8 +34,8 @@ public class PirateNPC extends AbstractPirateNPC {
      */
     public static AttributeSupplier.Builder createAttributes() {
         return PathfinderMob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 2.0D) // default 20 HP
-                .add(Attributes.MOVEMENT_SPEED, 0.125D); // 2x default walking speed
+                .add(Attributes.MAX_HEALTH, 2.0D) //  Default is 20 HP. (Set to 2 HP for testing)
+                .add(Attributes.MOVEMENT_SPEED, 0.125D); // Test walking speed
     }
 
     /* VARIANT */

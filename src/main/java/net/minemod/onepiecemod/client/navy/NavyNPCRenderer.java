@@ -12,19 +12,19 @@ import java.util.Map;
 public class NavyNPCRenderer extends AbstractNavyNPCRenderer<NavyNPC, NavyRenderState> {
 
     /**
-     * LOCATION_BY_VARIANT is a map of PirateVariants and ResourseLocations. This is how the getTextureLocation is able
+     * LOCATION_BY_VARIANT is a map of NavyVariants and ResourceLocations. This is how the getTextureLocation is able
      * to draw the correct ResourceLocation for the correct Variant.
      */
     private static final Map<NavyVariant, ResourceLocation> LOCATION_BY_VARIANT =
             Util.make(Maps.newEnumMap(NavyVariant.class), map -> {
-                map.put(NavyVariant.ZERO,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_v0.png"));
-                map.put(NavyVariant.ONE,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_v1.png"));
-                map.put(NavyVariant.TWO,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_v2.png"));
-                map.put(NavyVariant.THREE,
-                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_v3.png"));
+                map.put(NavyVariant.DEFAULT,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_default.png"));
+                map.put(NavyVariant.CADET,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_cadet.png"));
+                map.put(NavyVariant.AKAINU,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_akainu.png"));
+                map.put(NavyVariant.KOBY,
+                        ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/navy/navy_npc_koby.png"));
             });
 
     public NavyNPCRenderer(EntityRendererProvider.Context context) {

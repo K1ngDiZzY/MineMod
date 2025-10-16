@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 public class NavyRenderState extends HumanoidRenderState {
 
-    public NavyVariant variant = NavyVariant.ZERO;
+    public NavyVariant variant = NavyVariant.DEFAULT;
 
     public NavyVariant getVariant() {
         return variant;

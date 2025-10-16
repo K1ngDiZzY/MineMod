@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 public class PirateRenderState extends HumanoidRenderState {
 
-    public PirateVariant variant = PirateVariant.ZERO;
+    public PirateVariant variant = PirateVariant.DEFAULT;
 
     public PirateVariant getVariant() {
         return variant;
