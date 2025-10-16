@@ -1,15 +1,14 @@
-package net.minemod.onepiecemod.entity.npc;
+package net.minemod.onepiecemod.entity.npcs;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.level.Level;
 
 public class NPC extends AbstractNPC {
 
-    public NPC(EntityType<? extends NPC> type, Level pLevel) {
+    public NPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
     }
 

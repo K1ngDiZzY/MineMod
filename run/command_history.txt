@@ -5,3 +5,8 @@
 /time set noon
 /gamerule doDaylightCycle false
 /kill @e
+/gamerule doWeatherCycle false
+/weather clear
+/kill @e[name=
+/kill @e
+/enchant Dev minecraft:sharpness 5
