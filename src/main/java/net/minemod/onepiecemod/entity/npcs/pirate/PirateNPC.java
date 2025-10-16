@@ -27,6 +27,11 @@ public class PirateNPC extends AbstractPirateNPC {
         super(type, pLevel);
     }
 
+    /**
+     * createAttributes()
+     * This method is where we assign custom attributes to the NPCs (such as Speed, Health, Devil Fruit Effects, etc.)
+     * @return custom attributes for the NPC that extends AbstractNPC
+     */
     public static AttributeSupplier.Builder createAttributes() {
         return PathfinderMob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 2.0D) // default 20 HP
@@ -45,11 +50,11 @@ public class PirateNPC extends AbstractPirateNPC {
     }
 
     public PirateVariant getVariant() {
-        return PirateVariant.byId(this.getTypeVariant() & 255);
+        return PirateVariant.byId(this.entityData.get(VARIANT));
     }
 
     private void setVariant(PirateVariant variant) {
-        this.entityData.set(VARIANT, variant.getId() & 255);
+        this.entityData.set(VARIANT, variant.getId());
     }
 
     @Override

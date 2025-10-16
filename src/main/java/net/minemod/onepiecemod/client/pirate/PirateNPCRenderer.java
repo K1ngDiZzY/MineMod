@@ -3,20 +3,17 @@ package net.minemod.onepiecemod.client.pirate;
 import com.google.common.collect.Maps;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minemod.onepiecemod.OnePieceMod;
 import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
 
 import java.util.Map;
-import java.util.Random;
 
-public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, HumanoidRenderState> {
+public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, PirateRenderState> {
 
     /**
-     * This is a TEST NPC with a test skin to see how it works. will use this to model future NPCs
-     * This is where we can override the "AbstractNPC" Skin (I am using a Test dummy skin as a reference)
-     *
+     * LOCATION_BY_VARIANT is a map of PirateVariants and ResourseLocations. This is how the getTextureLocation is able
+     * to draw the correct ResourceLocation for the correct Variant.
      */
     private static final Map<PirateVariant, ResourceLocation> LOCATION_BY_VARIANT =
             Util.make(Maps.newEnumMap(PirateVariant.class), map -> {
@@ -46,22 +43,19 @@ public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, Huma
     }
 
     @Override
-    public PirateRenderState createRenderState() {
-        PirateRenderState renderState = new PirateRenderState();
-        PirateVariant[] variants = PirateVariant.values();
-        PirateVariant variant = variants[new Random().nextInt(variants.length)];
-        renderState.setVariant(variant);
-        return new PirateRenderState();
+    public void extractRenderState(PirateNPC entity, PirateRenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.setVariant(entity.getVariant());
     }
 
 
-    // TODO: FIX THIS METHOD: This method is called every tick, and is setting a random skin every tick
-    // We need to figure out how to get this setup with the individual entity
-    // The tutorial series passes (PirateNPC entity) as the parameter, but that doesn't work in 1.21.8 :/
     @Override
-    public ResourceLocation getTextureLocation(HumanoidRenderState pRenderState) {
-        PirateVariant[] variants = PirateVariant.values();
-        PirateVariant randomVariant = variants[new Random().nextInt(variants.length)];
-        return LOCATION_BY_VARIANT.get(randomVariant);
+    public PirateRenderState createRenderState() {
+        return new PirateRenderState();
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(PirateRenderState pRenderState) {
+        return LOCATION_BY_VARIANT.get(pRenderState.getVariant());
     }
 }
