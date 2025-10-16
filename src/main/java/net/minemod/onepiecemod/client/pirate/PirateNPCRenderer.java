@@ -29,15 +29,6 @@ public class PirateNPCRenderer extends AbstractPirateNPCRenderer<PirateNPC, Pira
                         ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v4.png"));
             });
 
-    /*
-    private static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "textures/entity/pirate/pirate_npc_v0.png"),
-            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v1.png"),
-            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v2.png"),
-            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v3.png"),
-            ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID,"textures/entity/pirate/pirate_npc_v4.png")
-    };
-    */
     public PirateNPCRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
