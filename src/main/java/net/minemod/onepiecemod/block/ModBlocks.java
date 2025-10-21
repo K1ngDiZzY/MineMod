@@ -20,8 +20,9 @@ import net.minemod.onepiecemod.item.ModItems;
 import java.util.function.Supplier;
 
 public class ModBlocks {
-    public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, OnePieceMod.MODID);
+
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, OnePieceMod.MODID);
+    public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, OnePieceMod.MODID);
 
     public static final RegistryObject<Block> BERRY_ORE = registerBlock("berry_ore",
             () -> new DropExperienceBlock(UniformInt.of(2,4), BlockBehaviour.Properties.of()
@@ -35,11 +36,12 @@ public class ModBlocks {
     }
 
     private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
-        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()
+        BLOCK_ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()
                 .setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, name)))));
     }
 
     public static void register(FMLJavaModLoadingContext context) {
         BLOCKS.register(context.getModBusGroup());
+        BLOCK_ITEMS.register(context.getModBusGroup());
     }
 }
