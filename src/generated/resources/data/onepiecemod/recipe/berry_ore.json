@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "onepiecemod:berry",
+    "S": "minecraft:stone"
+  },
+  "pattern": [
+    " B ",
+    "BSB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "onepiecemod:berry_ore"
+  }
+}

@@ -13,10 +13,11 @@ public class DataGeneration {
         var generator = event.getGenerator();
         var output = generator.getPackOutput();
         var lookupProvider = event.getLookupProvider();
-        var helper = event.getExistingFileHelper(); // Will be used for ModTagProvider
+        var helper = event.getExistingFileHelper();
 
         generator.addProvider(event.includeServer(), new ModLootProvider(output, lookupProvider));
         generator.addProvider(event.includeServer(), new ModTagProvider(output, lookupProvider, helper));
+        generator.addProvider(event.includeServer(), new ModRecipeProvider.Runner(output, lookupProvider));
 
         generator.addProvider(event.includeClient(), new ModModelProvider(output));
     }

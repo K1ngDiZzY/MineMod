@@ -13,8 +13,8 @@ import java.util.function.BiConsumer;
 
 public class ModItemModelGenerator extends ItemModelGenerators {
 
-    public ModItemModelGenerator(ItemModelOutput pItemModelOutput, BiConsumer<ResourceLocation, ModelInstance> pModelOutput) {
-        super(pItemModelOutput, pModelOutput);
+    public ModItemModelGenerator(ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+        super(itemModelOutput, modelOutput);
     }
 
     @Override

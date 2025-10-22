@@ -16,8 +16,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ModBlockModelGenerator extends BlockModelGenerators {
-    public ModBlockModelGenerator(Consumer<BlockModelDefinitionGenerator> pBlockStateOutput, ItemModelOutput pItemModelOutput, BiConsumer<ResourceLocation, ModelInstance> pModelOutput) {
-        super(pBlockStateOutput, pItemModelOutput, pModelOutput);
+    public ModBlockModelGenerator(Consumer<BlockModelDefinitionGenerator> blockStateOutput, ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+        super(blockStateOutput, itemModelOutput, modelOutput);
     }
 
     @Override
