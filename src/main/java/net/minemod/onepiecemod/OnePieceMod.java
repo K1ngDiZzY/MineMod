@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minemod.onepiecemod.block.ModBlocks;
+import net.minemod.onepiecemod.datagen.DataGeneration;
 import net.minemod.onepiecemod.entity.ModEntities;
 import net.minemod.onepiecemod.item.ModItems;
 import org.slf4j.Logger;
@@ -25,42 +27,16 @@ public final class OnePieceMod {
     public static final String MODID = "onepiecemod";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
+
     /*
-    // Creates a new Block with the id "onepiecemod:example_block", combining the namespace and path
-
-    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
-        () -> new Block(BlockBehaviour.Properties.of()
-            .setId(BLOCKS.key("example_block"))
-            .mapColor(MapColor.STONE)
-        )
-    );
-    // Creates a new BlockItem with the id "onepiecemod:example_block", combining the namespace and path
-    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
-        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties().setId(ITEMS.key("example_block")))
-    );
-
-    // Creates a new food item with the id "onepiecemod:example_id", nutrition 1 and saturation 2
-    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
-        () -> new Item(new Item.Properties()
-            .setId(ITEMS.key("example_item"))
-            .food(new FoodProperties.Builder()
-                .alwaysEdible()
-                .nutrition(1)
-                .saturationModifier(2f)
-                .build()
-            )
-        )
-    );
-
     // Creates a creative tab with the id "onepiecemod:example_tab" for the example item, that is placed after the combat tab
+    // WE REALLY SHOULD MAKE THIS!!!! So all our mod items are in the same Creative Mode tab
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
             }).build());
-
-
      */
 
 
@@ -79,11 +55,8 @@ public final class OnePieceMod {
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         /*
-        // Register the Deferred Register to the mod event bus so blocks get registered
-        BLOCKS.register(modBusGroup);
-        // Register the Deferred Register to the mod event bus so items get registered
-        ITEMS.register(modBusGroup);
         // Register the Deferred Register to the mod event bus so tabs get registered
+        // WE SHOULD DO THIS!!!! Custom Creative Tab
         CREATIVE_MODE_TABS.register(modBusGroup);
          */
     }

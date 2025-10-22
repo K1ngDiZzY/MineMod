@@ -10,3 +10,6 @@
 /kill @e[name=
 /kill @e
 /enchant Dev minecraft:sharpness 5
+/gamemode survival
+/gamemode creative
+/gamemode survival
