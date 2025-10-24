@@ -1,0 +1,53 @@
+name: Ensure Copilot guidance in PR body
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  append-guidance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Copilot guidance to PR body if missing
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              console.log('No pull request in context, exiting.');
+              return;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            // change this if you put guidance in a different file
+            const path = '.github/pr_copilot_review_instructions.md';
+
+            try {
+              const contentResponse = await github.rest.repos.getContent({
+                owner,
+                repo,
+                path,
+                ref: pr.head.sha
+              });
+
+              const fileContent = Buffer.from(contentResponse.data.content, contentResponse.data.encoding).toString('utf8');
+
+              const guidanceHeader = '## Copilot review guidance';
+              if ((pr.body || '').includes(guidanceHeader)) {
+                console.log('PR body already contains Copilot guidance — skipping.');
+                return;
+              }
+
+              const newBody = (pr.body || '') + '\n\n' + fileContent;
+
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: pr.number,
+                body: newBody
+              });
+
+              console.log('Appended Copilot guidance to PR body.');
+            } catch (error) {
+              console.log('Could not read guidance file or update PR body:', error.message);
+            }
