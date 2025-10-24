@@ -20,5 +20,8 @@ public class ModTagProvider extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         var mineable = this.tag(BlockTags.MINEABLE_WITH_PICKAXE);
         mineable.add(ModBlocks.BERRY_ORE.get());
+
+        var needsDiamond = this.tag(BlockTags.NEEDS_DIAMOND_TOOL);
+        needsDiamond.add(ModBlocks.BERRY_ORE.get());
     }
 }

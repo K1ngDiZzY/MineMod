@@ -5,12 +5,10 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -33,9 +31,11 @@ public class PirateNPC extends AbstractPirateNPC {
      * @return custom attributes for the NPC that extends AbstractNPC
      */
     public static AttributeSupplier.Builder createAttributes() {
-        return PathfinderMob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 2.0D) //  Default is 20 HP. (Set to 2 HP for testing)
-                .add(Attributes.MOVEMENT_SPEED, 0.125D); // Test walking speed
+        return Monster.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 2.0D)       // Default is 20 HP. (Set to 2 HP for testing)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D) // Test walking speed
+                .add(Attributes.FOLLOW_RANGE, 16.0D)    // Distance NPCs will track down its target
+                .add(Attributes.ATTACK_DAMAGE, 4.0D);   // Attack Damage
     }
 
     /* VARIANT */

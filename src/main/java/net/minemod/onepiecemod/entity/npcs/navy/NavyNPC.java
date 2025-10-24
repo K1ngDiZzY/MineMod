@@ -35,7 +35,9 @@ public class NavyNPC extends AbstractNavyNPC {
     public static AttributeSupplier.Builder createAttributes() {
         return PathfinderMob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 2.0D) // default 20 HP (Set to 2 for testing)
-                .add(Attributes.MOVEMENT_SPEED, 0.125D); // Test walking speed
+                .add(Attributes.MOVEMENT_SPEED, 0.25D) // Test walking speed
+                .add(Attributes.FOLLOW_RANGE, 16.0D)    // Distance NPCs will track down its target
+                .add(Attributes.ATTACK_DAMAGE, 4.0D);   // Attack Damage
     }
 
     /* VARIANT */
