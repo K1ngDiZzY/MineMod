@@ -10,11 +10,13 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AbstractPirateNPC extends PathfinderMob {
 
-    private boolean playerAggroEnabled = false;
+    private static final AtomicBoolean playerAggroEnabled = new AtomicBoolean(false);
 
     public AbstractPirateNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
@@ -42,9 +44,7 @@ public class AbstractPirateNPC extends PathfinderMob {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers()); // Retaliates when attacked
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, NavyNPC.class, 10, true, false, null));
     }
-
-
-
+    
     /**
      * Custom behavior would go here. This would be inherited by any NPC that extends this class.
      * -
@@ -58,14 +58,13 @@ public class AbstractPirateNPC extends PathfinderMob {
 
 
     @Override
-    protected void actuallyHurt(ServerLevel level, DamageSource source, float amount) {
-        if (!playerAggroEnabled && source.getEntity() instanceof Player) {
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true));
-            playerAggroEnabled = true;
+    protected void actuallyHurt(@NotNull ServerLevel level, DamageSource source, float amount) {
+        if (source.getEntity() instanceof Player) {
+            if (playerAggroEnabled.compareAndSet(false, true)) {
+                this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true));
+            }
         }
         super.actuallyHurt(level, source, amount);
     }
-
-
 
 }
