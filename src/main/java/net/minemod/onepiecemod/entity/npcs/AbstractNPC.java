@@ -19,7 +19,7 @@ public class AbstractNPC extends PathfinderMob {
      */
     @Override
     protected void registerGoals() {
-        // (if player has devil fruit, sing has priority 0)
+        // (if player has devil fruit, sink has priority 0)
         this.goalSelector.addGoal(1, new FloatGoal(this)); // Allows swimming
 
         this.goalSelector.addGoal(2, new PanicGoal(this, 2.0)); // When hit

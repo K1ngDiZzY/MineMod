@@ -1,2 +1,3 @@
-// 1.21.8	2025-10-20T21:45:23.3014117	Tags for minecraft:block mod id onepiecemod
+// 1.21.8	2025-10-23T21:50:27.7258219	Tags for minecraft:block mod id onepiecemod
 56a8c5738f40edcdec73dda534344cc2739d9440 data/minecraft/tags/block/mineable/pickaxe.json
+56a8c5738f40edcdec73dda534344cc2739d9440 data/minecraft/tags/block/needs_diamond_tool.json
