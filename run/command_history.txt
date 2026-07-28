@@ -38,3 +38,12 @@
 /gamemode survival
 /gamemode creative
 /gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/give Dev minecraft:emerald 65
