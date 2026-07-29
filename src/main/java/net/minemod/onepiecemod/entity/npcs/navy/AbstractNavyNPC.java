@@ -12,6 +12,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +32,6 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
     private UUID persistentAngerTarget;
 
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20,39);
-    private static final AtomicBoolean playerAggroEnabled = new AtomicBoolean(false);
 
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
@@ -59,8 +59,11 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
         // AlertOthers makes nearby NavyNPCs angry at whatever hit this mob.
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers()); // Retaliates when attacked
 
-        // This makes the NPC automatically target whatever player/entity it is angtry at via NeutralMob
+        // Makes NavyNPCs attack PirateNPCs in its vicinity (if "persistentAngerTarget" isn't another entity)
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PirateNPC.class, 10, true, false, null));
+
+        // Might want to set the last boolean value to "false" (if that will cause issues with aggro state?)
+        this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
     /**
@@ -115,7 +118,7 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
-        // Check if we are on the server side so wee can safely cast the level
+        // Check if we are on the server side so we can safely cast the level
         if(!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
 
             // Use the updated interface check requiring the ServerLevel
@@ -125,8 +128,27 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
                     itemStack.shrink(1);
                 }
 
+                // Stop NeutralMob anger timers
                 this.stopBeingAngry();
-                
+
+                // Clear AI target memory
+                this.setTarget(null);
+                this.lastHurtByPlayer = null;
+                this.setLastHurtByMob(null);
+
+                // FORCE the active AI goals to stop tracking you
+                this.targetSelector.getAvailableGoals().forEach(wrappedGoal -> {
+                    if (wrappedGoal.isRunning()) {
+                        wrappedGoal.stop();
+                    }
+                });
+
+                this.goalSelector.getAvailableGoals().forEach(wrappedGoal -> {
+                    if (wrappedGoal.isRunning()) {
+                        wrappedGoal.stop();
+                    }
+                });
+
                 return InteractionResult.SUCCESS;
             }
         }
