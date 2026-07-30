@@ -5,7 +5,6 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -13,18 +12,14 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
-import net.minemod.onepiecemod.item.ModItems;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMob {
 
@@ -40,8 +35,6 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
     }
-
-    //TODO: Register new goals
 
     /**
      * registerGoals()
@@ -65,8 +58,6 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
 
         // Makes NavyNPCs attack PirateNPCs in its vicinity (if "persistentAngerTarget" isn't another entity)
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PirateNPC.class, 10, true, false, null));
-
-        // Might want to set the last boolean value to "false" (if that will cause issues with aggro state?)
         this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
@@ -123,9 +114,9 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
     }
 
     /**
-     * Handles player interactions. Allows an aggressive NPC to be "bribed" with an Emerald,
+     * Handles player interactions. Allows an aggressive NavyNPC to be "bribed" with an Emerald,
      * resetting its anger and clearing its current targeting priorities.
-     * - Eventually "bribe" mechanic will be abstracted.
+     * - Eventually "bribe" mechanic will be abstracted to AbstractNPC.
      */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
