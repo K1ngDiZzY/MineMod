@@ -52,7 +52,6 @@ public class NavyNPC extends AbstractNavyNPC {
         return this.entityData.get(VARIANT);
     }
 
-
     public NavyVariant getVariant()
     {
         return NavyVariant.byId(this.entityData.get(VARIANT));

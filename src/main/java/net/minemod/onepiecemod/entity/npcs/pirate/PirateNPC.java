@@ -4,11 +4,14 @@ import net.minecraft.Util;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -31,7 +34,7 @@ public class PirateNPC extends AbstractPirateNPC {
      * @return custom attributes for the NPC that extends AbstractNPC
      */
     public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMobAttributes()
+        return PathfinderMob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 2.0D)       // Default is 20 HP. (Set to 2 HP for testing)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D) // Test walking speed
                 .add(Attributes.FOLLOW_RANGE, 16.0D)    // Distance NPCs will track down its target
@@ -49,7 +52,8 @@ public class PirateNPC extends AbstractPirateNPC {
         return this.entityData.get(VARIANT);
     }
 
-    public PirateVariant getVariant() {
+    public PirateVariant getVariant()
+    {
         return PirateVariant.byId(this.entityData.get(VARIANT));
     }
 
@@ -57,16 +61,29 @@ public class PirateNPC extends AbstractPirateNPC {
         this.entityData.set(VARIANT, variant.getId());
     }
 
+    /**
+     * Saves custom data to the NBT tag compound, including entity variants
+     * and active NeutralMob persistent anger states.
+     */
     @Override
     protected void addAdditionalSaveData(ValueOutput pOutput) {
         super.addAdditionalSaveData(pOutput);
         pOutput.putInt("Variant", this.getTypeVariant());
+        this.addPersistentAngerSaveData(pOutput);
     }
 
+    /**
+     * Reads custom data from the saved NBT tag compound to restore variants
+     * and persistent anger states upon entity load.
+     */
     @Override
     protected void readAdditionalSaveData(ValueInput pInput) {
         super.readAdditionalSaveData(pInput);
         pInput.getInt("Variant").ifPresent(value -> this.entityData.set(VARIANT, value));
+
+        if(this.level() instanceof ServerLevel serverLevel) {
+            this.readPersistentAngerSaveData(serverLevel, pInput);
+        }
     }
 
     @Override
