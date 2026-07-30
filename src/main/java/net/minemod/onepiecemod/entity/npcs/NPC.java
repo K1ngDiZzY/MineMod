@@ -5,6 +5,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
+
+import java.util.UUID;
 
 public class NPC extends AbstractNPC {
 
@@ -22,4 +25,6 @@ public class NPC extends AbstractNPC {
                 .add(Attributes.MAX_HEALTH, 40.0D) // default 20 HP (Set to 40 for testing)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D); // default walking speed
     }
+
+
 }
