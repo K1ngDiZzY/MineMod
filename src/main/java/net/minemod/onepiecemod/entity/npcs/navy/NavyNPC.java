@@ -4,6 +4,7 @@ import net.minecraft.Util;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -61,16 +62,29 @@ public class NavyNPC extends AbstractNavyNPC {
         this.entityData.set(VARIANT, variant.getId());
     }
 
+    /**
+     * Saves custom data to the NBT tag compound, including entity variants
+     * and active NeutralMob persistent anger states.
+     */
     @Override
     protected void addAdditionalSaveData(ValueOutput pOutput) {
         super.addAdditionalSaveData(pOutput);
         pOutput.putInt("Variant", this.getTypeVariant());
+        this.addPersistentAngerSaveData(pOutput);
     }
 
+    /**
+     * Reads custom data from the saved NBT tag compound to restore variants
+     * and persistent anger states upon entity load.
+     */
     @Override
     protected void readAdditionalSaveData(ValueInput pInput) {
         super.readAdditionalSaveData(pInput);
         pInput.getInt("Variant").ifPresent(value -> this.entityData.set(VARIANT, value));
+
+        if(this.level() instanceof ServerLevel serverLevel) {
+            this.readPersistentAngerSaveData(serverLevel, pInput);
+        }
     }
 
     @Override

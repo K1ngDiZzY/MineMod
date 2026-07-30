@@ -101,3 +101,5 @@ copilot.*
 
 
 
+# Ignore Minecraft runtime generation
+run/

@@ -1,22 +1,41 @@
 package net.minemod.onepiecemod.entity.npcs.navy;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.TimeUtil;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
+import net.minemod.onepiecemod.item.ModItems;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AbstractNavyNPC extends PathfinderMob {
+public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMob {
 
-    private static final AtomicBoolean playerAggroEnabled = new AtomicBoolean(false);
+    /** The remaining time (in ticks) that this NPC will stay angry at its target. */
+    private int remainingPersistentAngerTime;
+
+    /** The UUID of the player or entity that this NPC is currently angry at. */
+    private UUID persistentAngerTarget;
+
+    /** Defines the range of time (20 to 39 seconds) that anger will persist when triggered. */
+    private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20,39);
 
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
@@ -41,13 +60,19 @@ public class AbstractNavyNPC extends PathfinderMob {
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this)); // Idle head movement
 
         // Targeting logic
+        // AlertOthers makes nearby NavyNPCs angry at whatever hit this mob.
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers()); // Retaliates when attacked
+
+        // Makes NavyNPCs attack PirateNPCs in its vicinity (if "persistentAngerTarget" isn't another entity)
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PirateNPC.class, 10, true, false, null));
+
+        // Might want to set the last boolean value to "false" (if that will cause issues with aggro state?)
+        this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
     /**
      * Custom behavior would go here. This would be inherited by any NPC that extends this class.
-     * -
+     * - This will eventually be moved to AbstractNPC
      * isPushable()
      * Abstract NPC will move when nudged by the Player.
      */
@@ -56,15 +81,91 @@ public class AbstractNavyNPC extends PathfinderMob {
         return true;
     }
 
+    @Override
+    public int getRemainingPersistentAngerTime() {
+        return this.remainingPersistentAngerTime;
+    }
 
     @Override
-    protected void actuallyHurt(@NotNull ServerLevel level, DamageSource source, float amount) {
-        if (source.getEntity() instanceof Player) {
-            if (playerAggroEnabled.compareAndSet(false, true)) {
-                this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true));
+    public void setRemainingPersistentAngerTime(int pRemainingPersistentAngerTime) {
+        this.remainingPersistentAngerTime = pRemainingPersistentAngerTime;
+    }
+
+    @Override
+    @Nullable
+    public UUID getPersistentAngerTarget() {
+      return this.persistentAngerTarget;
+    }
+
+    @Override
+    public void setPersistentAngerTarget(@Nullable UUID pPersistentAngerTarget) {
+        this.persistentAngerTarget = pPersistentAngerTarget;
+    }
+
+    /**
+     * Starts the persistent anger timer by picking a random duration within the defined range.
+     */
+    @Override
+    public void startPersistentAngerTimer() {
+        this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
+    }
+
+    /**
+     * Handles server-side AI steps. Updates the persistent anger timers for the NeutralMob mechanics.
+     */
+    @Override
+    protected void customServerAiStep(ServerLevel pLevel) {
+        // Access pLevel directly
+        this.updatePersistentAnger(pLevel, true);
+
+        // Pass parameter to super method
+        super.customServerAiStep(pLevel);
+    }
+
+    /**
+     * Handles player interactions. Allows an aggressive NPC to be "bribed" with an Emerald,
+     * resetting its anger and clearing its current targeting priorities.
+     * - Eventually "bribe" mechanic will be abstracted.
+     */
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+
+        // Ensure execution happens strictly on the server side to manipulate AI goals safely
+        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+
+            // If the NPC is hostile to this specific player and the player holds an Emerald
+            if (this.isAngryAt(player, serverLevel) && itemStack.is(Items.EMERALD)) {
+
+                // Consume 1 emerald unless the player is in Creative Mode
+                if (!player.getAbilities().instabuild) {
+                    itemStack.shrink(1);
+                }
+
+                // 1. Reset standard NeutralMob anger state
+                this.stopBeingAngry();
+
+                // 2. Clear instant combat memories and combat targets
+                this.setTarget(null);
+                this.lastHurtByPlayer = null;
+                this.setLastHurtByMob(null);
+
+                // 3. Force active attack/navigation tasks to instantly drop the player
+                this.targetSelector.getAvailableGoals().forEach(wrappedGoal -> {
+                    if (wrappedGoal.isRunning()) {
+                        wrappedGoal.stop();
+                    }
+                });
+                this.goalSelector.getAvailableGoals().forEach(wrappedGoal -> {
+                    if (wrappedGoal.isRunning()) {
+                        wrappedGoal.stop();
+                    }
+                });
+
+                return InteractionResult.SUCCESS;
             }
         }
-        super.actuallyHurt(level, source, amount);
+        return super.mobInteract(player, hand);
     }
 
 }
