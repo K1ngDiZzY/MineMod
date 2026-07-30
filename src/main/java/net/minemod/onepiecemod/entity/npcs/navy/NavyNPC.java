@@ -62,6 +62,10 @@ public class NavyNPC extends AbstractNavyNPC {
         this.entityData.set(VARIANT, variant.getId());
     }
 
+    /**
+     * Saves custom data to the NBT tag compound, including entity variants
+     * and active NeutralMob persistent anger states.
+     */
     @Override
     protected void addAdditionalSaveData(ValueOutput pOutput) {
         super.addAdditionalSaveData(pOutput);
@@ -69,6 +73,10 @@ public class NavyNPC extends AbstractNavyNPC {
         this.addPersistentAngerSaveData(pOutput);
     }
 
+    /**
+     * Reads custom data from the saved NBT tag compound to restore variants
+     * and persistent anger states upon entity load.
+     */
     @Override
     protected void readAdditionalSaveData(ValueInput pInput) {
         super.readAdditionalSaveData(pInput);

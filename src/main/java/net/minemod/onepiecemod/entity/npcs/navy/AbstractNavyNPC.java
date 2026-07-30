@@ -28,9 +28,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMob {
 
+    /** The remaining time (in ticks) that this NPC will stay angry at its target. */
     private int remainingPersistentAngerTime;
+
+    /** The UUID of the player or entity that this NPC is currently angry at. */
     private UUID persistentAngerTarget;
 
+    /** Defines the range of time (20 to 39 seconds) that anger will persist when triggered. */
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20,39);
 
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
@@ -68,7 +72,7 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
 
     /**
      * Custom behavior would go here. This would be inherited by any NPC that extends this class.
-     * -
+     * - This will eventually be moved to AbstractNPC
      * isPushable()
      * Abstract NPC will move when nudged by the Player.
      */
@@ -98,13 +102,17 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
         this.persistentAngerTarget = pPersistentAngerTarget;
     }
 
+    /**
+     * Starts the persistent anger timer by picking a random duration within the defined range.
+     */
     @Override
     public void startPersistentAngerTimer() {
         this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
     }
 
-
-
+    /**
+     * Handles server-side AI steps. Updates the persistent anger timers for the NeutralMob mechanics.
+     */
     @Override
     protected void customServerAiStep(ServerLevel pLevel) {
         // Access pLevel directly
@@ -114,35 +122,40 @@ public abstract class AbstractNavyNPC extends PathfinderMob implements NeutralMo
         super.customServerAiStep(pLevel);
     }
 
+    /**
+     * Handles player interactions. Allows an aggressive NPC to be "bribed" with an Emerald,
+     * resetting its anger and clearing its current targeting priorities.
+     * - Eventually "bribe" mechanic will be abstracted.
+     */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
-        // Check if we are on the server side so we can safely cast the level
-        if(!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+        // Ensure execution happens strictly on the server side to manipulate AI goals safely
+        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
 
-            // Use the updated interface check requiring the ServerLevel
+            // If the NPC is hostile to this specific player and the player holds an Emerald
             if (this.isAngryAt(player, serverLevel) && itemStack.is(Items.EMERALD)) {
 
+                // Consume 1 emerald unless the player is in Creative Mode
                 if (!player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
 
-                // Stop NeutralMob anger timers
+                // 1. Reset standard NeutralMob anger state
                 this.stopBeingAngry();
 
-                // Clear AI target memory
+                // 2. Clear instant combat memories and combat targets
                 this.setTarget(null);
                 this.lastHurtByPlayer = null;
                 this.setLastHurtByMob(null);
 
-                // FORCE the active AI goals to stop tracking you
+                // 3. Force active attack/navigation tasks to instantly drop the player
                 this.targetSelector.getAvailableGoals().forEach(wrappedGoal -> {
                     if (wrappedGoal.isRunning()) {
                         wrappedGoal.stop();
                     }
                 });
-
                 this.goalSelector.getAvailableGoals().forEach(wrappedGoal -> {
                     if (wrappedGoal.isRunning()) {
                         wrappedGoal.stop();
