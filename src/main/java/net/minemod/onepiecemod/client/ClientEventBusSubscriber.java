@@ -9,9 +9,9 @@ import net.minemod.onepiecemod.OnePieceMod;
 import net.minemod.onepiecemod.client.navy.NavyNPCRenderer;
 import net.minemod.onepiecemod.client.pirate.PirateNPCRenderer;
 import net.minemod.onepiecemod.entity.ModEntities;
-import net.minemod.onepiecemod.entity.npcs.NPC;
-import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
-import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
+import net.minemod.onepiecemod.entity.npcs.passive.civilian.NPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 
 
 @Mod.EventBusSubscriber(modid = OnePieceMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

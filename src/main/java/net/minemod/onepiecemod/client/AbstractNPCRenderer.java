@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minemod.onepiecemod.OnePieceMod;
 import net.minemod.onepiecemod.entity.npcs.AbstractNPC;
-import net.minemod.onepiecemod.entity.npcs.NPC;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractNPCRenderer <T extends AbstractNPC, S extends HumanoidRenderState> extends HumanoidMobRenderer<T, S, HumanoidModel<S>> {

@@ -1,4 +1,4 @@
-package net.minemod.onepiecemod.entity.npcs.navy;
+package net.minemod.onepiecemod.entity.npcs.neutral.navy;
 
 import net.minecraft.Util;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,18 +19,25 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minemod.onepiecemod.client.navy.NavyVariant;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This class represents a Navy NPC. (Should eventually change to NavyGruntNPC to allow for more individualization.)
+ * - (Low level NPC belonging to the "Navy" NPC group.)
+ */
 public class NavyNPC extends AbstractNavyNPC {
 
+    /** Variables */
     private static final EntityDataAccessor<Integer> VARIANT =
             SynchedEntityData.defineId(NavyNPC.class, EntityDataSerializers.INT);
 
+    /** Constructor */
     public NavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
     }
 
     /**
      * createAttributes()
-     * This method is where we assign custom attributes to the NPCs (such as Speed, Health, Devil Fruit Effects, etc.)
+     * - This method builds the attributes for a "Navy" NPC. (Has low HP, and low Speed values for testing.)
+     * - TODO: change attributes to normal levels (not test levels).
      * @return custom attributes for the NPC that extends AbstractNPC
      */
     public static AttributeSupplier.Builder createAttributes() {
@@ -41,7 +48,17 @@ public class NavyNPC extends AbstractNavyNPC {
                 .add(Attributes.ATTACK_DAMAGE, 4.0D);   // Attack Damage
     }
 
-    /* VARIANT */
+    /**
+     * These methods define the "Variant" of the Navy NPC that is spawned.
+     * - (TODO: Should eventually be abstracted out to AbstractNavyNPC...)
+     * - defineSynchedData()
+     * - getTypeVariant()
+     * - getVariant()
+     * - setVariant()
+     * - addAdditionalSaveData()
+     * - readAdditionalSaveData()
+     * @param builder The data builder used to register network-synced entity parameters.
+     */
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);

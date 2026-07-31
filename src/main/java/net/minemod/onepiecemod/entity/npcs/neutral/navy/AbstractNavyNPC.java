@@ -1,11 +1,10 @@
-package net.minemod.onepiecemod.entity.npcs.navy;
+package net.minemod.onepiecemod.entity.npcs.neutral.navy;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
@@ -13,21 +12,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minemod.onepiecemod.entity.npcs.AbstractNPC;
-import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 
-import java.util.UUID;
+public abstract class AbstractNavyNPC extends AbstractNeutralNPC {
 
-public abstract class AbstractNavyNPC extends AbstractNPC {
-
+    /** Constructor */
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
     }
 
     /**
      * registerGoals()
-     * This method is where we can select Goals from the minecraft.world.entity.ai.goal library.
-     * (Eventually we can create custom Goals that pertain to our mod, such as sink goals, targetNavy/Pirate goals, etc.)
+     * - Goals that will be applied globally to all Navy NPCs.
+     * - (Example: Attack PirateNPCs on sight, Bribable with Emeralds, Arrest PirateNPCs, etc.)
      */
     @Override
     protected void registerGoals() {
@@ -44,9 +42,10 @@ public abstract class AbstractNavyNPC extends AbstractNPC {
     }
 
     /**
-     * Handles player interactions. Allows an aggressive NavyNPC to be "bribed" with an Emerald,
-     * resetting its anger and clearing its current targeting priorities.
-     * - Eventually "bribe" mechanic will be abstracted to AbstractNPC.
+     * mobInteract()
+     * - Handles player interactions. Allows an aggressive NavyNPC to be "bribed" with an Emerald,
+     * - resetting its anger and clearing its current targeting priorities.
+     * - (Eventually "bribe" mechanic will be abstracted to AbstractNeutralNPC)
      */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {

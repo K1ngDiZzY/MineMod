@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minemod.onepiecemod.OnePieceMod;
-import net.minemod.onepiecemod.entity.npcs.NPC;
+import net.minemod.onepiecemod.entity.npcs.passive.civilian.NPC;
 import org.jetbrains.annotations.NotNull;
 
 public class NPCRenderer extends AbstractNPCRenderer<NPC, HumanoidRenderState> {

@@ -1,11 +1,10 @@
-package net.minemod.onepiecemod.entity.npcs.pirate;
+package net.minemod.onepiecemod.entity.npcs.neutral.pirate;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
@@ -13,21 +12,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minemod.onepiecemod.entity.npcs.AbstractNPC;
-import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
 
-import java.util.UUID;
+public class AbstractPirateNPC extends AbstractNeutralNPC {
 
-public class AbstractPirateNPC extends AbstractNPC {
-
+    /** Constructor */
     public AbstractPirateNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
     }
 
     /**
      * registerGoals()
-     * This method is where we can select Goals from the minecraft.world.entity.ai.goal library.
-     * (Eventually we can create custom Goals that pertain to our mod, such as sink goals, targetNavy/Pirate goals, etc.)
+     * - Goals that will be applied globally to all PirateNPCs.
+     * - (Example: Attack Navy NPCs on sight, Bribable with Diamonds, etc.)
      */
     @Override
     protected void registerGoals() {
@@ -45,9 +43,10 @@ public class AbstractPirateNPC extends AbstractNPC {
     }
 
     /**
-     * Handles player interactions. Allows an aggressive PirateNPC to be "bribed" with a Diamond,
-     * resetting its anger and clearing its current targeting priorities.
-     * - Eventually "bribe" mechanic will be abstracted to AbstractNPC.
+     * mobInteract()
+     * - Handles player interactions. Allows an aggressive PirateNPC to be "bribed" with a Diamond,
+     * - resetting its anger and clearing its current targeting priorities.
+     * - Eventually "bribe" mechanic will be abstracted to AbstractNeutralNPC.
      */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
