@@ -10,9 +10,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.minemod.onepiecemod.OnePieceMod;
-import net.minemod.onepiecemod.entity.npcs.NPC;
-import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
-import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
+import net.minemod.onepiecemod.entity.npcs.passive.civilian.NPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 
 public class ModEntities {
     /** Deferred Register for Entities. (Any custom NPCs would be added here) */

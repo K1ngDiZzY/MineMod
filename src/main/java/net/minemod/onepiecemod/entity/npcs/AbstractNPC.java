@@ -6,39 +6,42 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public class AbstractNPC extends PathfinderMob {
+/**
+ * This Class is the Parent Class to all NPCs.
+ * - Any global behavior should go here. Implements "PathfinderMob" to allow pathfinding for NPCs.
+ * - (Example: Devil Fruit checks, Inventory declaration, Trade/Bribe/Pickpocket mechanics, etc.)
+ */
+public abstract class AbstractNPC extends PathfinderMob {
 
+    /** Constructor */
     public AbstractNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
     }
 
     /**
      * registerGoals()
-     * This method is where we can select Goals from the minecraft.world.entity.ai.goal library.
-     * (Eventually we can create custom Goals that pertain to our mod, such as sink goals, targetNavy/Pirate goals, etc.)
+     * - Goals that will be applied globally to all NPCs.
+     * (Example: Devil Fruit behavior, NPC head-movement, etc.)
      */
     @Override
     protected void registerGoals() {
-        // (if player has devil fruit, sink has priority 0)
+        // Movement and idle behavior
+        // If Devil Fruit, disable FloatGoal (upcoming Feature)
         this.goalSelector.addGoal(1, new FloatGoal(this)); // Allows swimming
 
-        this.goalSelector.addGoal(2, new PanicGoal(this, 2.0)); // When hit
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0D)); // Wandering
+        // If Devil Fruit, enable WaterAvoidingRandomStrollGoal (upcoming Feature)
+        //this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D)); // Wanders around and avoids water
 
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0F));
-        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F)); // Looks at players
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this)); // Idle head movement
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F)); // Looks at nearby players
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this)); // Idle head movement
     }
 
     /**
-     * Custom behavior would go here. This would be inherited by any NPC that extends this class.
-     * -
      * isPushable()
-     * Abstract NPC will move when nudged by the Player.
+     * - Abstract NPC will move when nudged by the Player.
      */
     @Override
     public boolean isPushable() {
         return true;
     }
-
 }

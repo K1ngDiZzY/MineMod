@@ -4,7 +4,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
 
 public abstract class AbstractNavyNPCRenderer <T extends NavyNPC, S extends NavyRenderState> extends HumanoidMobRenderer<T, S, HumanoidModel<S>> {
 

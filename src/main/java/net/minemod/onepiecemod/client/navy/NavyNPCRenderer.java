@@ -5,7 +5,7 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minemod.onepiecemod.OnePieceMod;
-import net.minemod.onepiecemod.entity.npcs.navy.NavyNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
 
 import java.util.Map;
 

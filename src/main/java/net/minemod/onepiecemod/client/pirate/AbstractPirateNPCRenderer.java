@@ -4,7 +4,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minemod.onepiecemod.entity.npcs.pirate.PirateNPC;
+import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 
 public abstract class AbstractPirateNPCRenderer <T extends PirateNPC, S extends PirateRenderState> extends HumanoidMobRenderer<T, S, HumanoidModel<S>> {
 

@@ -1,12 +1,17 @@
-package net.minemod.onepiecemod.entity.npcs;
+package net.minemod.onepiecemod.entity.npcs.passive.civilian;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minemod.onepiecemod.entity.npcs.passive.AbstractPassiveNPC;
 
-public class NPC extends AbstractNPC {
+/**
+ * This class represents a "Test-Dummy" NPC that is used for testing purposes. Does not move, and has High HP.
+ * - (This class is placed in the "npcs.passive.civilian" package, because Civilian NPCs are coming soon.)
+ */
+public class NPC extends AbstractPassiveNPC {
 
     public NPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
@@ -14,7 +19,7 @@ public class NPC extends AbstractNPC {
 
     /**
      * createAttributes()
-     * This method is where we assign custom attributes to the NPCs (such as Speed, Health, Devil Fruit Effects, etc.)
+     * - This method builds the attributes for a "Test-Dummy" NPC. Has high HP, and low Speed values for testing.
      * @return custom attributes for the NPC that extends AbstractNPC
      */
     public static AttributeSupplier.Builder createAttributes() {
@@ -22,4 +27,6 @@ public class NPC extends AbstractNPC {
                 .add(Attributes.MAX_HEALTH, 40.0D) // default 20 HP (Set to 40 for testing)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D); // default walking speed
     }
+
+
 }
