@@ -50,7 +50,6 @@ public class PirateNPC extends AbstractPirateNPC {
 
     /**
      * These methods define the "Variant" of the Pirate NPC that is spawned.
-     * - (TODO: Should eventually be abstracted out to AbstractNavyNPC...)
      * - defineSynchedData()
      * - getTypeVariant()
      * - getVariant()
