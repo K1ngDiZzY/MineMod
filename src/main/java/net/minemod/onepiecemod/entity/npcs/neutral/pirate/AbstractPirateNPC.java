@@ -22,7 +22,7 @@ public class AbstractPirateNPC extends AbstractNeutralNPC implements Bribable {
 
     /** Variables */
     private final int DEFAULT_PIRATE_BRIBE_COST = 3;
-    private final float DEFAULT_PIRATE_BRIBE_CHANCE = 0.6f;
+    private final float DEFAULT_PIRATE_BRIBE_CHANCE = 0.2f;
 
     private BribeState bribeState = BribeState.CAN_BRIBE;
 
@@ -121,9 +121,11 @@ public class AbstractPirateNPC extends AbstractNeutralNPC implements Bribable {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         // 1. Process Bribe attempt
-        InteractionResult bribeResult = this.processBribe(this, player, hand);
-        if (bribeResult.consumesAction()) {
-            return bribeResult;
+        if (this.getBribeState(player) != BribeState.FAILED_PERMANENT) {
+            InteractionResult bribeResult = this.processBribe(this, player, hand);
+            if (bribeResult.consumesAction()) {
+                return bribeResult;
+            }
         }
 
         // 2. Add future interactions here cleanly (e.g. Trading, Pickpocketing)

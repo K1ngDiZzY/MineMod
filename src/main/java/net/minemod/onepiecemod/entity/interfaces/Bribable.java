@@ -27,8 +27,9 @@ public interface Bribable {
     /** Different Enum states to determine Bribe Behavior */
     enum BribeState {
         CAN_BRIBE,
-        FAILED_PERMANENT,
-        COOLDOWN
+        STRIKE_ONE,
+        STRIKE_TWO,
+        FAILED_PERMANENT
     }
 
     /**
@@ -37,7 +38,7 @@ public interface Bribable {
      * - (Example: If the player is "Wanted" then a NavyCaptainNPC's "isBribable" tag would be "false.)
      */
     default boolean isBribable(Player player) {
-        return getBribeState(player) == BribeState.CAN_BRIBE;
+        return getBribeState(player) != BribeState.FAILED_PERMANENT;
     }
 
     /** Returns current Bribe state for a specific player. */
@@ -62,6 +63,9 @@ public interface Bribable {
     }
 
     default void onBribeSuccess(Player player, PathfinderMob mob) {
+        // Reset strike count back to default state upon successful bribe
+        setBribeState(BribeState.CAN_BRIBE);
+
         // 1. Pacification logic for Neutral NPCs
         if (mob instanceof NeutralMob neutralMob && mob.level() instanceof ServerLevel serverLevel) {
             neutralMob.stopBeingAngry();
@@ -105,8 +109,17 @@ public interface Bribable {
 
     default void onBribeFailed(Player player, PathfinderMob mob) {
         if (mob.level() instanceof ServerLevel serverLevel) {
-            // 1. Anger logic (Set "isBribable()" to false)
-            setBribeState(BribeState.FAILED_PERMANENT);
+
+            // Calculate next strike state
+            BribeState currentState = getBribeState(player);
+            BribeState nextState;
+
+            switch (currentState) {
+                case CAN_BRIBE -> nextState = BribeState.STRIKE_ONE;
+                case STRIKE_ONE -> nextState = BribeState.STRIKE_TWO;
+                default -> nextState = BribeState.FAILED_PERMANENT;
+            }
+            setBribeState(nextState);
 
             if (mob instanceof NeutralMob neutralMob) {
                 neutralMob.startPersistentAngerTimer();
@@ -132,63 +145,54 @@ public interface Bribable {
             );
 
             // 4. Chat Message (System message in chat or action bar)
-            player.displayClientMessage(
-                    Component.translatable("Bribe Failed", mob.getDisplayName())
-                            .withStyle(ChatFormatting.RED),
-                    true // true = Action Bar
-            );
+            Component message = switch (nextState) {
+                case STRIKE_ONE -> Component.translatable("Bribe Failed! (Strike 1)", mob.getDisplayName())
+                        .withStyle(ChatFormatting.YELLOW);
+                case STRIKE_TWO -> Component.translatable("Bribe Failed! Be careful... (Strike 2)", mob.getDisplayName())
+                        .withStyle(ChatFormatting.GOLD);
+                default -> Component.translatable("This NPC refuses to be bribed anymore!", mob.getDisplayName())
+                        .withStyle(ChatFormatting.RED);
+            };
+
+            player.displayClientMessage(message, true);
         }
     }
 
     default InteractionResult processBribe(PathfinderMob mob, Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
 
-        // Only proceed if holding the correct bribe item and sufficient quantity
+        // 1. Check if player is holding the required bribe item and stack size
         if (!heldItem.is(getBribeItem()) || heldItem.getCount() < getBribeCost()) {
             return InteractionResult.PASS;
         }
 
-        BribeState state = getBribeState(player);
-
-        switch (state) {
-            case CAN_BRIBE -> {
-                if (!mob.level().isClientSide()) {
-                    // Consume item unless in Creative
-                    if (!player.getAbilities().instabuild) {
-                        heldItem.shrink(getBribeCost());
-                    }
-
-                    // Roll probability check
-                    if (mob.getRandom().nextFloat() <= getBribeChance()) {
-                        onBribeSuccess(player, mob);
-                    } else {
-                        onBribeFailed(player, mob);
-                    }
-                }
-                return InteractionResult.SUCCESS;
+        // 2. Check if the NPC refuses bribes from this player (FAILED_PERMANENT or custom condition)
+        if (!isBribable(player)) {
+            if (!mob.level().isClientSide()) {
+                player.displayClientMessage(
+                        Component.translatable("This NPC refuses to take your bribes!!", mob.getDisplayName())
+                                .withStyle(ChatFormatting.RED),
+                        true
+                );
             }
-            case FAILED_PERMANENT -> {
-                if (!mob.level().isClientSide()) {
-                    player.displayClientMessage(
-                            Component.translatable("Won't Trade!", mob.getDisplayName())
-                                    .withStyle(ChatFormatting.RED),
-                            true
-                    );
-                }
-                return InteractionResult.FAIL;
+            return InteractionResult.FAIL;
+        }
+
+        // 3. Process the bribe logic
+        if (!mob.level().isClientSide()) {
+            // Consume item unless in Creative
+            if (!player.getAbilities().instabuild) {
+                heldItem.shrink(getBribeCost());
             }
-            case COOLDOWN -> {
-                if (!mob.level().isClientSide()) {
-                    player.displayClientMessage(
-                            Component.translatable("Maybe Later..", mob.getDisplayName())
-                                    .withStyle(ChatFormatting.YELLOW),
-                            true
-                    );
-                }
-                return InteractionResult.FAIL;
+
+            // Roll probability check
+            if (mob.getRandom().nextFloat() <= getBribeChance()) {
+                onBribeSuccess(player, mob);
+            } else {
+                onBribeFailed(player, mob);
             }
         }
 
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
 }

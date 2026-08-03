@@ -22,7 +22,7 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
 
     /** Variables */
     private final int DEFAULT_NAVY_BRIBE_COST = 5;
-    private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.8f;
+    private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.5f;
 
     private BribeState bribeState = BribeState.CAN_BRIBE;
 
@@ -121,9 +121,11 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         // 1. Process Bribe attempt
-        InteractionResult bribeResult = this.processBribe(this, player, hand);
-        if (bribeResult.consumesAction()) {
-            return bribeResult;
+        if (this.getBribeState(player) != BribeState.FAILED_PERMANENT) {
+            InteractionResult bribeResult = this.processBribe(this, player, hand);
+            if (bribeResult.consumesAction()) {
+                return bribeResult;
+            }
         }
 
         // 2. Add future interactions here cleanly (e.g. Trading, Pickpocketing)
