@@ -9,13 +9,22 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minemod.onepiecemod.entity.interfaces.Bribable;
 import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
 import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 
-public abstract class AbstractNavyNPC extends AbstractNeutralNPC {
+public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Bribable {
+
+    /** Variables */
+    private final int DEFAULT_NAVY_BRIBE_COST = 5;
+    private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.5f;
+
+    private BribeState bribeState = BribeState.CAN_BRIBE;
 
     /** Constructor */
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
@@ -42,49 +51,85 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC {
     }
 
     /**
+     * Bribable Interface methods. Defines PirateNPC Bribe behavior
+     * -getBribeItem(): returns the set Bribe Item.
+     * -getBribeCost(): returns the number of Bribe Items consumed per Bribe Attempt.
+     * -getBribeChance(): returns the chance that a Bribe Attempt will succeed.
+     * -isBribable(): returns true if Bribe Attempt can be made, false otherwise.
+     * -getBribeState(): returns the Bribe State of the NPC.
+     * -setBribeState(): set the Bribe State of the NPC
+     */
+    @Override
+    public Item getBribeItem() {
+        return Items.EMERALD;
+    }
+
+    @Override
+    public int getBribeCost() {
+        return DEFAULT_NAVY_BRIBE_COST;
+    }
+
+    @Override
+    public float getBribeChance() {
+        return DEFAULT_NAVY_BRIBE_CHANCE;
+    }
+
+    @Override
+    public boolean isBribable(Player player) {
+        // Navy NPCs only allow bribing if currently hostile towards this player
+        if (this.level() instanceof ServerLevel serverLevel) {
+            return this.isAngryAt(player, serverLevel);
+        }
+        return false;
+    }
+
+    @Override
+    public BribeState getBribeState(Player player) {
+        return this.bribeState;
+    }
+
+    @Override
+    public void setBribeState(BribeState state) {
+        this.bribeState = state;
+    }
+
+    /**
+     * Saves custom data to the NBT tag compound, including entity variants
+     * and active NeutralMob persistent anger states.
+     */
+    @Override
+    protected void addAdditionalSaveData(ValueOutput pOutput) {
+        super.addAdditionalSaveData(pOutput);
+        pOutput.putString("BribeState", this.bribeState.name());
+    }
+
+    /**
+     * Reads custom data from the saved NBT tag compound to restore variants
+     * and persistent anger states upon entity load.
+     */
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.getString("BribeState").ifPresent(val -> this.bribeState = BribeState.valueOf(val));
+    }
+
+    /**
      * mobInteract()
-     * - Handles player interactions. Allows an aggressive NavyNPC to be "bribed" with an Emerald,
-     * - resetting its anger and clearing its current targeting priorities.
-     * - (Eventually "bribe" mechanic will be abstracted to AbstractNeutralNPC)
+     * - Handles player interactions.
+     * - (Handling events for: Bribe Interaction, Trade Interaction, Pickpocket Interaction, etc
      */
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-
-        // Ensure execution happens strictly on the server side to manipulate AI goals safely
-        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-
-            // If the NPC is hostile to this specific player and the player holds an Emerald
-            if (this.isAngryAt(player, serverLevel) && itemStack.is(Items.EMERALD)) {
-
-                // Consume 1 emerald unless the player is in Creative Mode
-                if (!player.getAbilities().instabuild) {
-                    itemStack.shrink(1);
-                }
-
-                // 1. Reset standard NeutralMob anger state
-                this.stopBeingAngry();
-
-                // 2. Clear instant combat memories and combat targets
-                this.setTarget(null);
-                this.lastHurtByPlayer = null;
-                this.setLastHurtByMob(null);
-
-                // 3. Force active attack/navigation tasks to instantly drop the player
-                this.targetSelector.getAvailableGoals().forEach(wrappedGoal -> {
-                    if (wrappedGoal.isRunning()) {
-                        wrappedGoal.stop();
-                    }
-                });
-                this.goalSelector.getAvailableGoals().forEach(wrappedGoal -> {
-                    if (wrappedGoal.isRunning()) {
-                        wrappedGoal.stop();
-                    }
-                });
-
-                return InteractionResult.SUCCESS;
+        // 1. Process Bribe attempt
+        if (this.getBribeState(player) != BribeState.FAILED_PERMANENT) {
+            InteractionResult bribeResult = this.processBribe(this, player, hand);
+            if (bribeResult.consumesAction()) {
+                return bribeResult;
             }
         }
+
+        // 2. Add future interactions here cleanly (e.g. Trading, Pickpocketing)
+
         return super.mobInteract(player, hand);
     }
 
