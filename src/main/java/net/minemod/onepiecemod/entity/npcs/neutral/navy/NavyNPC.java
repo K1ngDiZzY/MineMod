@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -12,11 +13,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minemod.onepiecemod.client.navy.NavyVariant;
+import net.minemod.onepiecemod.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -50,7 +54,6 @@ public class NavyNPC extends AbstractNavyNPC {
 
     /**
      * These methods define the "Variant" of the Navy NPC that is spawned.
-     * - (TODO: Should eventually be abstracted out to AbstractNavyNPC...)
      * - defineSynchedData()
      * - getTypeVariant()
      * - getVariant()
@@ -108,5 +111,10 @@ public class NavyNPC extends AbstractNavyNPC {
         NavyVariant variant = Util.getRandom(NavyVariant.values(), this.random);
         this.setVariant(variant);
         return super.finalizeSpawn(pLevel, pDifficulty, pSpawnReason, pSpawnGroupData);
+    }
+
+    @Override
+    protected void populateDefaultInventory(RandomSource random) {
+        this.getInventory().addItem(new ItemStack(ModItems.BERRY.get(), 32));
     }
 }
