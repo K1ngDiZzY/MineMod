@@ -95,6 +95,11 @@ public abstract class AbstractNPC extends PathfinderMob {
         input.list("Items", ItemStack.CODEC).ifPresent(this.inventory::fromItemList);
     }
 
+    /**
+     * dropCustomDeathLoot()
+     * - This method defines what drops when the NPC dies. By default, entire inventory will drop.
+     * - (Eventually, can have certain items that will drop 100% and some that drop at lower chances.)
+     * */
     @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, source, recentlyHit);
@@ -109,26 +114,23 @@ public abstract class AbstractNPC extends PathfinderMob {
      */
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pSpawnReason, @Nullable SpawnGroupData pSpawnGroupData) {
-        SpawnGroupData data = super.finalizeSpawn(pLevel, pDifficulty, pSpawnReason, pSpawnGroupData);
-
         // Only populate items if this is a fresh spawn (not loading from world save NBT)
         this.populateDefaultInventory(pLevel.getRandom());
 
-        return data;
+        return super.finalizeSpawn(pLevel, pDifficulty, pSpawnReason, pSpawnGroupData);
     }
 
     /**
      * Override this in child classes (e.g., PirateNPC, NavyNPC) to define default inventory items.
      */
     protected void populateDefaultInventory(RandomSource random) {
-        // Default base items for ALL NPCs (optional)
-        // Example:
-        this.getInventory().addItem(new ItemStack(Items.BREAD, 2));
+        // Left blank, so Child NPC classes can Override and implement their own inventories.
+        // Example: this.getInventory().addItem(new ItemStack(Items.BREAD, 2));
     }
 
     /**
      * isPushable()
-     * - Abstract NPC will move when nudged by the Player.
+     * - All NPCs have collision with the Player (will move when nudged by the Player).
      */
     @Override
     public boolean isPushable() {
