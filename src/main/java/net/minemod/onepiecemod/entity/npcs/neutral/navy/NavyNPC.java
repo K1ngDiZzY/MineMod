@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -12,11 +13,13 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minemod.onepiecemod.client.navy.NavyVariant;
+import net.minemod.onepiecemod.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -50,13 +53,12 @@ public class NavyNPC extends AbstractNavyNPC {
 
     /**
      * These methods define the "Variant" of the Navy NPC that is spawned.
-     * - (TODO: Should eventually be abstracted out to AbstractNavyNPC...)
      * - defineSynchedData()
      * - getTypeVariant()
      * - getVariant()
      * - setVariant()
-     * - addAdditionalSaveData()
-     * - readAdditionalSaveData()
+     * - addAdditionalSaveData() - Saves custom Variant data to the NBT tag compound
+     * - readAdditionalSaveData() - Reads custom Variant data from the NBT tag compound
      * @param builder The data builder used to register network-synced entity parameters.
      */
     @Override
@@ -78,10 +80,6 @@ public class NavyNPC extends AbstractNavyNPC {
         this.entityData.set(VARIANT, variant.getId());
     }
 
-    /**
-     * Saves custom data to the NBT tag compound, including entity variants
-     * and active NeutralMob persistent anger states.
-     */
     @Override
     protected void addAdditionalSaveData(ValueOutput pOutput) {
         super.addAdditionalSaveData(pOutput);
@@ -89,10 +87,6 @@ public class NavyNPC extends AbstractNavyNPC {
         this.addPersistentAngerSaveData(pOutput);
     }
 
-    /**
-     * Reads custom data from the saved NBT tag compound to restore variants
-     * and persistent anger states upon entity load.
-     */
     @Override
     protected void readAdditionalSaveData(ValueInput pInput) {
         super.readAdditionalSaveData(pInput);
@@ -103,10 +97,18 @@ public class NavyNPC extends AbstractNavyNPC {
         }
     }
 
+    /** Override the method definition in AbstractNPC to set the Variant, before calling the super method.  */
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pSpawnReason, @Nullable SpawnGroupData pSpawnGroupData) {
         NavyVariant variant = Util.getRandom(NavyVariant.values(), this.random);
         this.setVariant(variant);
+
         return super.finalizeSpawn(pLevel, pDifficulty, pSpawnReason, pSpawnGroupData);
+    }
+
+    /** Override the method definition in AbstractNPC to make the NPC spawn with 32 Berrys in its inventory. */
+    @Override
+    protected void populateDefaultInventory(RandomSource random) {
+        this.getInventory().addItem(new ItemStack(ModItems.BERRY.get(), 32));
     }
 }

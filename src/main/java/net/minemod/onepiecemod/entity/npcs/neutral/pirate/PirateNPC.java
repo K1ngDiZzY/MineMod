@@ -54,8 +54,8 @@ public class PirateNPC extends AbstractPirateNPC {
      * - getTypeVariant()
      * - getVariant()
      * - setVariant()
-     * - addAdditionalSaveData()
-     * - readAdditionalSaveData()
+     * - addAdditionalSaveData() - Saves custom Variant data to the NBT tag compound
+     * - readAdditionalSaveData() - Reads custom Variant data from the NBT tag compound
      * @param builder The data builder used to register network-synced entity parameters.
      */
     @Override
@@ -77,10 +77,6 @@ public class PirateNPC extends AbstractPirateNPC {
         this.entityData.set(VARIANT, variant.getId());
     }
 
-    /**
-     * Saves custom data to the NBT tag compound, including entity variants
-     * and active NeutralMob persistent anger states.
-     */
     @Override
     protected void addAdditionalSaveData(ValueOutput pOutput) {
         super.addAdditionalSaveData(pOutput);
@@ -88,10 +84,6 @@ public class PirateNPC extends AbstractPirateNPC {
         this.addPersistentAngerSaveData(pOutput);
     }
 
-    /**
-     * Reads custom data from the saved NBT tag compound to restore variants
-     * and persistent anger states upon entity load.
-     */
     @Override
     protected void readAdditionalSaveData(ValueInput pInput) {
         super.readAdditionalSaveData(pInput);
@@ -102,6 +94,7 @@ public class PirateNPC extends AbstractPirateNPC {
         }
     }
 
+    /** Override the method definition in AbstractNPC to set the Variant, before calling the super method.  */
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pSpawnReason, @Nullable SpawnGroupData pSpawnGroupData) {
         PirateVariant variant = Util.getRandom(PirateVariant.values(), this.random);
