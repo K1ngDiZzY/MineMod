@@ -16,6 +16,9 @@ public class ModTagProvider extends BlockTagsProvider {
         super(output, lookupProvider, OnePieceMod.MODID, existingFileHelper);
     }
 
+    /**
+     * The addTags() method dd the p
+     */
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         var mineable = this.tag(BlockTags.MINEABLE_WITH_PICKAXE);
