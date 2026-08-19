@@ -59,7 +59,7 @@ public class ModLootProvider extends LootTableProvider {
 
     // Declare loot table .json files to be created for custom ModBlocks
     // TODO: Add resourceLocation to make a Blocks Folder? Otherwise will land in items. may not be a big deal
-    private static class Blocks extends BlockLootSubProvider {
+    public static class Blocks extends BlockLootSubProvider {
         protected Blocks(HolderLookup.Provider lookupProvider) {
             super(Set.of(), FeatureFlags.REGISTRY.allFlags(), lookupProvider);
         }
@@ -96,7 +96,7 @@ public class ModLootProvider extends LootTableProvider {
     // Declare loot table .json files to be created for custom ModEntities?
     // private static class Entities extends EntityLootSubProvider {}
     // TODO: Add resourceLocation to make a Entities Folder? Otherwise will land in items. may not be a big deal
-    private static class Entities extends EntityLootSubProvider {
+    public static class Entities extends EntityLootSubProvider {
 
         protected Entities(HolderLookup.Provider lookupProvider) {
             super(FeatureFlags.REGISTRY.allFlags(), lookupProvider);
@@ -138,7 +138,7 @@ public class ModLootProvider extends LootTableProvider {
     // Declare loot table .json files to be created for custom Gameplay events. (chests, Inventory generation, etc..)
     // TODO: Fill in generate() method. Create custom LootPools here.
     // TODO: Figure out how to make this work
-    private static class Gameplay implements LootTableSubProvider {
+    public static class Gameplay implements LootTableSubProvider {
 
         protected Gameplay(HolderLookup.Provider lookupProvider) {}
 

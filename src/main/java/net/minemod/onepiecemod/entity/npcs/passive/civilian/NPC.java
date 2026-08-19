@@ -1,10 +1,12 @@
 package net.minemod.onepiecemod.entity.npcs.passive.civilian;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minemod.onepiecemod.entity.npcs.passive.AbstractPassiveNPC;
 
 /**
@@ -15,6 +17,11 @@ public class NPC extends AbstractPassiveNPC {
 
     public NPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
+    }
+
+    @Override
+    public ResourceKey<LootTable> getNPCInventoryLootTable() {
+        return null;
     }
 
     /**

@@ -12,7 +12,7 @@ import net.minemod.onepiecemod.entity.npcs.AbstractNPC;
  * - Any passive-specific behavior will go here.
  * - (Example: Will never attack, Flees when attacked, etc.)
  */
-public class AbstractPassiveNPC extends AbstractNPC {
+public abstract class AbstractPassiveNPC extends AbstractNPC {
 
     public AbstractPassiveNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
