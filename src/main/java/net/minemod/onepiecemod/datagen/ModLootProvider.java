@@ -144,12 +144,17 @@ public class ModLootProvider extends LootTableProvider {
 
         public static final ResourceKey<LootTable> PIRATE_INVENTORY = ResourceKey.create(
                 Registries.LOOT_TABLE,
-                ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "gameplay/npc_inventory/pirate")
+                ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "gameplay/npc_inventory/pirate_inventory")
         );
 
         public static final ResourceKey<LootTable> NAVY_INVENTORY = ResourceKey.create(
                 Registries.LOOT_TABLE,
-                ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "gameplay/npc_inventory/navy")
+                ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "gameplay/npc_inventory/navy_inventory")
+        );
+
+        public static final ResourceKey<LootTable> NPC_INVENTORY = ResourceKey.create(
+                Registries.LOOT_TABLE,
+                ResourceLocation.fromNamespaceAndPath(OnePieceMod.MODID, "gameplay/npc_inventory/npc_inventory")
         );
 
         @Override
@@ -172,6 +177,14 @@ public class ModLootProvider extends LootTableProvider {
                             .setRolls(ConstantValue.exactly(1.0F))
                             .add(LootItem.lootTableItem(Items.CROSSBOW).setWeight(5))
                             .add(LootItem.lootTableItem(Items.IRON_SWORD).setWeight(5)))
+            );
+
+            // NPC Initial Inventory Pool
+            builder.accept(NPC_INVENTORY, LootTable.lootTable()
+                    .withPool(LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0F))
+                            .add(LootItem.lootTableItem(Items.BARRIER).setWeight(5))
+                            .add(LootItem.lootTableItem(Items.END_PORTAL_FRAME).setWeight(5)))
             );
         }
     }
