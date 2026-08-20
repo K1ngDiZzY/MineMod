@@ -1,7 +1,8 @@
-// 1.21.8	2026-08-12T22:45:31.0201958	Loot Tables
+// 1.21.8	2026-08-19T18:47:24.913727	Loot Tables
 edcca213f5cc49af9b4afbb05bd9b52c20f2a719 data/onepiecemod/loot_table/blocks/berry_ore.json
 8b9aa2e83b3f3470aa8db7ea458af66bcdbeb9a7 data/onepiecemod/loot_table/entities/navy_npc.json
 638a4d80735dc7fed17d48da9622922b35d21059 data/onepiecemod/loot_table/entities/npc.json
 685ffde0b21bce8077c0a0a546185e373f500d89 data/onepiecemod/loot_table/entities/pirate_npc.json
-9a74a5b009af47ba472b71db4fe9f8d80be79542 data/onepiecemod/loot_table/gameplay/npc_inventory/navy.json
-c39fc51ee0ef55ee498682af7c42524e98fa8b20 data/onepiecemod/loot_table/gameplay/npc_inventory/pirate.json
+41f1b42881178c3e89b775c761271a93ec5024d2 data/onepiecemod/loot_table/gameplay/npc_inventory/navy_inventory.json
+091364bf04dfb81f0d14c8d6b94c4738ac405464 data/onepiecemod/loot_table/gameplay/npc_inventory/npc_inventory.json
+16db04a1db589b8ef0108c8339baf4a8f8a760f0 data/onepiecemod/loot_table/gameplay/npc_inventory/pirate_inventory.json

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minemod.onepiecemod.datagen.ModLootProvider;
 import net.minemod.onepiecemod.entity.npcs.passive.AbstractPassiveNPC;
 
 /**
@@ -21,7 +22,7 @@ public class NPC extends AbstractPassiveNPC {
 
     @Override
     public ResourceKey<LootTable> getNPCInventoryLootTable() {
-        return null;
+        return ModLootProvider.Gameplay.NPC_INVENTORY;
     }
 
     /**

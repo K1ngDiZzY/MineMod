@@ -6,17 +6,17 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:crossbow",
+          "name": "minecraft:barrier",
           "weight": 5
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_sword",
+          "name": "minecraft:end_portal_frame",
           "weight": 5
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "onepiecemod:gameplay/npc_inventory/navy"
+  "random_sequence": "onepiecemod:gameplay/npc_inventory/npc_inventory"
 }
