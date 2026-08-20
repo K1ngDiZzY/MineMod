@@ -10,7 +10,7 @@ import net.minemod.onepiecemod.entity.npcs.AbstractNPC;
  * - Any hostile-specific behavior will go here.
  * - (Example: Chasing entities, Always attacks nearest entity, Flees only when low HP, etc.)
  */
-public class AbstractHostileNPC extends AbstractNPC {
+public abstract class AbstractHostileNPC extends AbstractNPC {
 
     /** Constructor */
     public AbstractHostileNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {

@@ -1,5 +1,6 @@
 package net.minemod.onepiecemod.entity.npcs.neutral.navy;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minemod.onepiecemod.datagen.ModLootProvider;
 import net.minemod.onepiecemod.entity.interfaces.Bribable;
 import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
 import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
@@ -29,6 +32,11 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     /** Constructor */
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
+    }
+
+    @Override
+    public ResourceKey<LootTable> getNPCInventoryLootTable(){
+        return ModLootProvider.Gameplay.NAVY_INVENTORY;
     }
 
     /**

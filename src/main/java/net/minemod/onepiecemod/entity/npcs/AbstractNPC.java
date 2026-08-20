@@ -1,5 +1,6 @@
 package net.minemod.onepiecemod.entity.npcs;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -17,9 +18,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * This Class is the Parent Class to all NPCs.
@@ -39,9 +45,32 @@ public abstract class AbstractNPC extends PathfinderMob {
     }
 
     /**
+     * getNPCInventoryLootTable()
+     * - Child classes can define their own Loot Pools.
+     */
+    public abstract ResourceKey<LootTable> getNPCInventoryLootTable();
+
+    // Populate inventory using Minecraft's LootTable system
+    public void generateNPCInventory() {
+        if (!this.level().isClientSide() && this.getNPCInventoryLootTable() != null) {
+            LootTable lootTable = Objects.requireNonNull(this.level().getServer())
+                    .reloadableRegistries()
+                    .getLootTable(this.getNPCInventoryLootTable());
+
+            LootParams lootParams = new LootParams.Builder((ServerLevel) this.level())
+                    .withParameter(LootContextParams.ORIGIN, this.position())
+                    .withParameter(LootContextParams.THIS_ENTITY, this)
+                    .create(LootContextParamSets.CHEST); // Uses chest-like generation
+
+            // Fills the SimpleContainer with items from the table
+            lootTable.fill(this.inventory, lootParams, this.getRandom().nextLong());
+        }
+    }
+
+    /**
      * registerGoals()
      * - Goals that will be applied globally to all NPCs.
-     * (Example: Devil Fruit behavior, NPC head-movement, etc.)
+     * - (Example: Devil Fruit behavior, NPC head-movement, etc.)
      */
     @Override
     protected void registerGoals() {
@@ -116,7 +145,7 @@ public abstract class AbstractNPC extends PathfinderMob {
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pSpawnReason, @Nullable SpawnGroupData pSpawnGroupData) {
         // Only populate items if this is a fresh spawn (not loading from world save NBT)
         this.populateDefaultInventory(pLevel.getRandom());
-
+        this.generateNPCInventory();
         return super.finalizeSpawn(pLevel, pDifficulty, pSpawnReason, pSpawnGroupData);
     }
 
