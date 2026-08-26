@@ -40,13 +40,14 @@ public interface Pickpocketable {
 
     /** Base success chance between 0.0 (0%) and 1.0 (100%). Default is 0.5 (50%). */
     default float getPickpocketChance() {
-        return 0.5f;
+        return 1.0f;
     }
 
-    /** Requires the player to be crouching/sneaking to initiate a pickpocket. Default is true. */
+    /** Requires the player to be crouching/sneaking to initiate a pickpocket. Default is true.
     default boolean requiresSneaking() {
         return true;
     }
+    */
 
     default void onPickpocketSuccess(Player player, PathfinderMob mob) {
         // Reset strike state on successful pickpocket
@@ -126,20 +127,28 @@ public interface Pickpocketable {
     }
 
     default InteractionResult processPickpocket(PathfinderMob mob, Player player, InteractionHand hand) {
-        // Check if player is sneaking, and has an empty hand.
-
         // Check if NPC is pickpocketable (call isPickpocketable())
             // Fail Logic / Lockout error message
 
         // Skill Check (Some kind of Quick Time Event)
-            skillCheck();
+            //  skillCheck();
 
         // If skill check succeeds:
-            onPickpocketSuccess(player, mob);
+            //  onPickpocketSuccess(player, mob);
         // Else, skill check fails:
-            onPickpocketFailed(player, mob);
+            //  onPickpocketFailed(player, mob);
 
-        return null;
+        /** TODO: PICKPOCKET CHANCE TEMPORARILY SET TO 100% */
+        if (!mob.level().isClientSide()) {
+            if (mob.getRandom().nextFloat() <= getPickpocketChance()) {
+                onPickpocketSuccess(player, mob);
+            } else {
+                // Roll failed -> trigger anger & strikes
+                onPickpocketFailed(player, mob);
+            }
+        }
+
+        return InteractionResult.SUCCESS;
     }
 
     default void skillCheck() {
