@@ -16,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minemod.onepiecemod.block.ModBlocks;
 import net.minemod.onepiecemod.entity.ModEntities;
 import net.minemod.onepiecemod.item.ModItems;
+import net.minemod.onepiecemod.network.PacketHandler;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -62,6 +63,9 @@ public final class OnePieceMod {
     private void commonSetup(final FMLCommonSetupEvent event) {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
+
+        // Enqueue PacketHandler registration safely during common setup execution
+        event.enqueueWork(PacketHandler::register);
 
         if (Config.logDirtBlock)
             LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
