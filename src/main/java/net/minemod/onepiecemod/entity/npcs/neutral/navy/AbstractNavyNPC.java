@@ -150,11 +150,10 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
 
         // 2. Process Pickpocket attempt
         if ((this.getPickpocketState(player) != PickpocketState.FAILED_PERMANENT) && player.isCrouching()) {
-            InteractionResult pickpocketResult = this.processPickpocket(this, player, hand);
-
+            return this.processPickpocket(this, player, hand);
         }
 
-        // 3. Add future interactions here cleanly (e.g. Trading, Pickpocketing)
+        // 3. Add future interactions here cleanly (e.g. Trading, etc)
 
         return super.mobInteract(player, hand);
     }

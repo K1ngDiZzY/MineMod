@@ -17,17 +17,19 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minemod.onepiecemod.datagen.ModLootProvider;
 import net.minemod.onepiecemod.entity.interfaces.Bribable;
+import net.minemod.onepiecemod.entity.interfaces.Pickpocketable;
 import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
 import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
 import net.minemod.onepiecemod.item.ModItems;
 
-public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Bribable {
+public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable {
 
     /** Variables */
     private final int DEFAULT_PIRATE_BRIBE_COST = 3;
     private final float DEFAULT_PIRATE_BRIBE_CHANCE = 0.2f;
 
     private BribeState bribeState = BribeState.CAN_BRIBE;
+    private PickpocketState pickpocketState = PickpocketState.CAN_PICKPOCKET;
 
     /** Constructor */
     public AbstractPirateNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
@@ -102,6 +104,17 @@ public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Br
         this.bribeState = state;
     }
 
+
+    @Override
+    public PickpocketState getPickpocketState(Player player) {
+        return this.pickpocketState;
+    }
+
+    @Override
+    public void setPickpocketState(PickpocketState state) {
+        this.pickpocketState = state;
+    }
+
     /**
      * Saves custom data to the NBT tag compound, including entity variants
      * and active NeutralMob persistent anger states.
@@ -137,7 +150,12 @@ public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Br
             }
         }
 
-        // 2. Add future interactions here cleanly (e.g. Trading, Pickpocketing)
+        // 2. Process Pickpocket attempt
+        if ((this.getPickpocketState(player) != PickpocketState.FAILED_PERMANENT) && player.isCrouching()) {
+            return this.processPickpocket(this, player, hand);
+        }
+
+        // 3. Add future interactions here cleanly (e.g. Trading, etc)
 
         return super.mobInteract(player, hand);
     }
