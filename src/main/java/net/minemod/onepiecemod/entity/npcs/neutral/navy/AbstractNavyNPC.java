@@ -1,5 +1,8 @@
 package net.minemod.onepiecemod.entity.npcs.neutral.navy;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +32,10 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.5f;
 
     private BribeState bribeState = BribeState.CAN_BRIBE;
-    private PickpocketState pickpocketState = PickpocketState.CAN_PICKPOCKET;
+
+    // Define the data key
+    private static final EntityDataAccessor<Byte> PICKPOCKET_STATE =
+            SynchedEntityData.defineId(AbstractNavyNPC.class, EntityDataSerializers.BYTE);
 
     /** Constructor */
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
@@ -104,15 +110,24 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     }
 
 
+    // Register key in defineSynchedData
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PICKPOCKET_STATE, (byte) PickpocketState.CAN_PICKPOCKET.ordinal());
+    }
+
     @Override
     public PickpocketState getPickpocketState(Player player) {
-        return this.pickpocketState;
+        byte ordinal = this.entityData.get(PICKPOCKET_STATE);
+        return PickpocketState.values()[ordinal];
     }
 
     @Override
     public void setPickpocketState(PickpocketState state) {
-        this.pickpocketState = state;
+        this.entityData.set(PICKPOCKET_STATE, (byte) state.ordinal());
     }
+
     /**
      * Saves custom data to the NBT tag compound, including entity variants
      * and active NeutralMob persistent anger states.
