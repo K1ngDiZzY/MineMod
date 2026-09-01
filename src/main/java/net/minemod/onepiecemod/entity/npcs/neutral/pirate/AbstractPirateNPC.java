@@ -127,6 +127,18 @@ public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Br
     public void setPickpocketState(PickpocketState state) {
         this.entityData.set(PICKPOCKET_STATE, (byte) state.ordinal());
     }
+
+    @Override
+    public boolean requiresSkillCheck()
+    {
+        return true;
+    }
+
+    @Override
+    public int getSkillCheckMaxTicks(){
+        return 200; // 10 seconds (20 ticks per second)
+    }
+
     /**
      * Saves custom data to the NBT tag compound, including entity variants
      * and active NeutralMob persistent anger states.

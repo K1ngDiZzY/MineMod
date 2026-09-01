@@ -128,6 +128,17 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
         this.entityData.set(PICKPOCKET_STATE, (byte) state.ordinal());
     }
 
+    @Override
+    public boolean requiresSkillCheck()
+    {
+        return true;
+    }
+
+    @Override
+    public int getSkillCheckMaxTicks(){
+        return 100; // 5 seconds (20 ticks per second)
+    }
+
     /**
      * Saves custom data to the NBT tag compound, including entity variants
      * and active NeutralMob persistent anger states.

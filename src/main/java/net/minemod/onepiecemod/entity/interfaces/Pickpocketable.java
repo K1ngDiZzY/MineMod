@@ -44,16 +44,21 @@ public interface Pickpocketable {
     /** Sets the Pickpocket state on the entity implementation. */
     void setPickpocketState(PickpocketState state);
 
-    /** Base success chance between 0.0 (0%) and 1.0 (100%). Default is 0.5 (50%). */
+    /** TODO: PICKPOCKET CHANCE TEMPORARILY SET TO 100% */
+    /** Base success chance between 0.0 (0%) and 1.0 (100%). Default is 1.0 (100%). */
     default float getPickpocketChance() {
         return 1.0f;
     }
 
-    /** Requires the player to be crouching/sneaking to initiate a pickpocket. Default is true.
-    default boolean requiresSneaking() {
-        return true;
+    boolean requiresSkillCheck();
+
+    /** Determines the Timeout Period of the Skill Check screen. Default is 5 seconds (1 second   */
+    default int getSkillCheckMaxTicks() { return 100; }
+
+    /** Determines the total number of key presses required for the Skill Check */
+    default int getSkillCheckKeyCount(Player player) {
+        return 4;
     }
-    */
 
     default InteractionResult processPickpocket(PathfinderMob mob, Player player, InteractionHand hand) {
         // Check state before proceeding
@@ -68,9 +73,15 @@ public interface Pickpocketable {
             return InteractionResult.FAIL;
         }
 
-        // Define Helper Variables
+        // If the NPC does not require a SKil
+        if(!this.requiresSkillCheck()){
+           onPickpocketSuccess(player, mob);
+           return InteractionResult.PASS;
+        }
+
         if(mob.level().isClientSide()){
             int keyCount = getSkillCheckKeyCount(player);
+            int maxTicks = getSkillCheckMaxTicks();
             List<SkillCheckKey> sequence = generateSkillCheckSequence(mob.getRandom(), keyCount);
 
             // Extract GKFW keycodes and labels for the screen
@@ -79,27 +90,11 @@ public interface Pickpocketable {
 
 
             net.minecraft.client.Minecraft.getInstance().setScreen(
-                    new PickpocketSkillCheckScreen(mob, keyCodes, labels)
+                    new PickpocketSkillCheckScreen(mob, keyCodes, labels, maxTicks)
             );
         }
 
-//        /** TODO: PICKPOCKET CHANCE TEMPORARILY SET TO 100% */
-//        if (!mob.level().isClientSide()) {
-//            if (mob.getRandom().nextFloat() <= getPickpocketChance()) {
-//                onPickpocketSuccess(player, mob);
-//            } else {
-//                // Roll failed -> trigger anger & strikes
-//                onPickpocketFailed(player, mob);
-//            }
-//        }
-
         return InteractionResult.SUCCESS;
-    }
-
-
-    /** Determines the total number of key presses required for the Skill Check */
-    default int getSkillCheckKeyCount(Player player) {
-        return 4;
     }
 
     /** Helper Struct to hold GLFW Keycode and matching UI label. */
