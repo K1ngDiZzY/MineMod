@@ -128,16 +128,28 @@ public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Br
         this.entityData.set(PICKPOCKET_STATE, (byte) state.ordinal());
     }
 
+
+
+    @Override
+    public float getPickpocketChance(){ return 0.75F; } // 75% chance that Pickpocket attempt will trigger a Skill Check
+
     @Override
     public boolean requiresSkillCheck()
     {
         return true;
-    }
+    } // This NPC requires a Skill Check
 
     @Override
     public int getSkillCheckMaxTicks(){
         return 200; // 10 seconds (20 ticks per second)
     }
+
+    @Override
+    public int getSkillCheckKeyCount() {
+        return 4;
+    } // 4 Keys are generated for Pickpocket Skill Check
+
+
 
     /**
      * Saves custom data to the NBT tag compound, including entity variants
