@@ -128,6 +128,29 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
         this.entityData.set(PICKPOCKET_STATE, (byte) state.ordinal());
     }
 
+
+
+    @Override
+    public float getPickpocketChance(){ return 0.25F; } // 25% chance that Pickpocket attempt will trigger a Skill Check
+
+    @Override
+    public boolean requiresSkillCheck()
+    {
+        return true;
+    } // This NPC requires a Skill Check
+
+    @Override
+    public int getSkillCheckMaxTicks(){
+        return 100; // 5 seconds (20 ticks per second)
+    }
+
+    @Override
+    public int getSkillCheckKeyCount() {
+        return 6;
+    } // 6 Keys are generated for Pickpocket Skill Check
+
+
+
     /**
      * Saves custom data to the NBT tag compound, including entity variants
      * and active NeutralMob persistent anger states.

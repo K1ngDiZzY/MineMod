@@ -13,23 +13,27 @@ public class PickpocketSkillCheckScreen extends Screen {
     private final int mobEntityId;
     private final List<Integer> requiredKeys;
     private final List<String> keyLabels;
+
+    // Customizable Skill Check Difficulty
+    private int maxTicks;
+
+
     private int currentStep = 0;
 
-    private final int maxTicks = 100; // Expanded to 5 seconds so you have time to see it
-    private int ticksRemaining = maxTicks;
 
-    public PickpocketSkillCheckScreen(PathfinderMob mob, List<Integer> requiredKeys, List<String> keyLabels) {
+    public PickpocketSkillCheckScreen(PathfinderMob mob, List<Integer> requiredKeys, List<String> keyLabels, int maxTicks) {
         super(Component.literal("Pickpocket Skill Check"));
         this.mobEntityId = mob.getId();
         this.requiredKeys = requiredKeys;
         this.keyLabels = keyLabels;
+        this.maxTicks = maxTicks;
     }
 
     @Override
     public void tick() {
         super.tick();
-        ticksRemaining--;
-        if (ticksRemaining <= 0) {
+        maxTicks--;
+        if (maxTicks <= 0) {
             finishSkillCheck(false);
         }
     }
@@ -85,7 +89,7 @@ public class PickpocketSkillCheckScreen extends Screen {
         }
 
         // 4. Render Timer with full ARGB red (0xFFFF5555)
-        float remainingSeconds = Math.max(0, ticksRemaining / 20.0f);
+        float remainingSeconds = Math.max(0, maxTicks / 20.0f);
         String timeString = String.format("Time: %.1fs", remainingSeconds);
         guiGraphics.drawCenteredString(this.font, timeString, centerX, centerY + 30, 0xFFFF5555);
 

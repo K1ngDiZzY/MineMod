@@ -32,12 +32,7 @@ public class SkillCheckResultPacket {
                 Entity entity = player.level().getEntity(payload.mobId);
                 if (entity instanceof PathfinderMob mob && entity instanceof Pickpocketable pickpocketable) {
                     if (payload.success) {
-                        float chance = pickpocketable.getPickpocketChance();
-                        if (mob.getRandom().nextFloat() <= chance) {
-                            pickpocketable.onPickpocketSuccess(player, mob);
-                        } else {
-                            pickpocketable.onPickpocketFailed(player, mob);
-                        }
+                        pickpocketable.onPickpocketSuccess(player, mob);
                     } else {
                         pickpocketable.onPickpocketFailed(player, mob);
                     }

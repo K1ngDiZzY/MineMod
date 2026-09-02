@@ -44,67 +44,66 @@ public interface Pickpocketable {
     /** Sets the Pickpocket state on the entity implementation. */
     void setPickpocketState(PickpocketState state);
 
-    /** Base success chance between 0.0 (0%) and 1.0 (100%). Default is 0.5 (50%). */
-    default float getPickpocketChance() {
-        return 1.0f;
-    }
+    /** Base success chance between 0.0 (0%) and 1.0 (100%). */
+    float getPickpocketChance();
 
-    /** Requires the player to be crouching/sneaking to initiate a pickpocket. Default is true.
-    default boolean requiresSneaking() {
-        return true;
-    }
-    */
+    /** Determines if the NPC requires a Skill Check when attempting to Pickpocket. */
+    boolean requiresSkillCheck();
+
+    /** Determines the Timeout Period of the Skill Check screen. Default is 5 seconds (1 second   */
+    int getSkillCheckMaxTicks();
+
+    /** Determines the total number of key presses required for the Skill Check */
+    int getSkillCheckKeyCount();
 
     default InteractionResult processPickpocket(PathfinderMob mob, Player player, InteractionHand hand) {
-        // Check state before proceeding
-        if (!isPickpocketable(player)) {
-            if (!mob.level().isClientSide()) {
+
+        // Refactored processPickpocket() method
+        if (!mob.level().isClientSide()) {
+
+            // Check state before proceeding
+            if (!isPickpocketable(player)) {
                 player.displayClientMessage(
                         Component.translatable("%s is watching you closely and cannot be pickpocketed!", mob.getDisplayName())
                                 .withStyle(ChatFormatting.RED),
                         true
                 );
+                return InteractionResult.FAIL;
             }
-            return InteractionResult.FAIL;
+
+            // Pickpocket Chance check
+            if(mob.getRandom().nextFloat() > getPickpocketChance()) {
+                onPickpocketFailed(player, mob);
+                return InteractionResult.FAIL;
+            }
+
+            // If the NPC does not require a Skill Check
+            if(!this.requiresSkillCheck()){
+                onPickpocketSuccess(player, mob);
+                return InteractionResult.PASS;
+            }
+            else {
+                int keyCount = getSkillCheckKeyCount();
+                int maxTicks = getSkillCheckMaxTicks();
+                List<SkillCheckKey> sequence = generateSkillCheckSequence(mob.getRandom(), keyCount);
+
+                // Extract GKFW keycodes and labels for the screen
+                List<Integer> keyCodes = sequence.stream().map(SkillCheckKey::keyCode).toList();
+                List<String> labels = sequence.stream().map(SkillCheckKey::label).toList();
+
+
+                net.minecraft.client.Minecraft.getInstance().setScreen(
+                        new PickpocketSkillCheckScreen(mob, keyCodes, labels, maxTicks)
+                );
+            }
         }
-
-        // Define Helper Variables
-        if(mob.level().isClientSide()){
-            int keyCount = getSkillCheckKeyCount(player);
-            List<SkillCheckKey> sequence = generateSkillCheckSequence(mob.getRandom(), keyCount);
-
-            // Extract GKFW keycodes and labels for the screen
-            List<Integer> keyCodes = sequence.stream().map(SkillCheckKey::keyCode).toList();
-            List<String> labels = sequence.stream().map(SkillCheckKey::label).toList();
-
-
-            net.minecraft.client.Minecraft.getInstance().setScreen(
-                    new PickpocketSkillCheckScreen(mob, keyCodes, labels)
-            );
-        }
-
-//        /** TODO: PICKPOCKET CHANCE TEMPORARILY SET TO 100% */
-//        if (!mob.level().isClientSide()) {
-//            if (mob.getRandom().nextFloat() <= getPickpocketChance()) {
-//                onPickpocketSuccess(player, mob);
-//            } else {
-//                // Roll failed -> trigger anger & strikes
-//                onPickpocketFailed(player, mob);
-//            }
-//        }
-
         return InteractionResult.SUCCESS;
-    }
-
-
-    /** Determines the total number of key presses required for the Skill Check */
-    default int getSkillCheckKeyCount(Player player) {
-        return 4;
     }
 
     /** Helper Struct to hold GLFW Keycode and matching UI label. */
     record SkillCheckKey(int keyCode, String label) {}
 
+    /** TODO Make list of possible keys customizable. */
     /** Pool of possible keys used for the Skill Check sequence. */
     List<SkillCheckKey> SKILL_CHECK_KEY_POOL = List.of(
             new SkillCheckKey(GLFW.GLFW_KEY_W, "W"),
