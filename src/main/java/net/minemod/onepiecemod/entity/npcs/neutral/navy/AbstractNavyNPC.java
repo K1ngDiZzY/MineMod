@@ -27,6 +27,7 @@ import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 
 public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable {
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Variables */
     private final int DEFAULT_NAVY_BRIBE_COST = 5;
     private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.5f;
@@ -37,6 +38,7 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     private static final EntityDataAccessor<Byte> PICKPOCKET_STATE =
             SynchedEntityData.defineId(AbstractNavyNPC.class, EntityDataSerializers.BYTE);
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
@@ -66,30 +68,36 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
         this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
-    /**
-     * Bribable Interface methods. Defines PirateNPC Bribe behavior
-     * -getBribeItem(): returns the set Bribe Item.
-     * -getBribeCost(): returns the number of Bribe Items consumed per Bribe Attempt.
-     * -getBribeChance(): returns the chance that a Bribe Attempt will succeed.
-     * -isBribable(): returns true if Bribe Attempt can be made, false otherwise.
-     * -getBribeState(): returns the Bribe State of the NPC.
-     * -setBribeState(): set the Bribe State of the NPC
-     */
+    /** TODO: Refactor for Difficulty Builder (Base Difficulty for NavyNPCs) */
     @Override
     public Item getBribeItem() {
         return Items.EMERALD;
     }
-
     @Override
     public int getBribeCost() {
         return DEFAULT_NAVY_BRIBE_COST;
     }
-
     @Override
     public float getBribeChance() {
         return DEFAULT_NAVY_BRIBE_CHANCE;
     }
+    @Override
+    public float getPickpocketChance(){ return 0.25F; } // 25% chance that Pickpocket attempt will trigger a Skill Check
+    @Override
+    public boolean requiresSkillCheck()
+    {
+        return true;
+    } // This NPC requires a Skill Check
+    @Override
+    public int getSkillCheckMaxTicks(){
+        return 100; // 5 seconds (20 ticks per second)
+    }
+    @Override
+    public int getSkillCheckKeyCount() {
+        return 6;
+    } // 6 Keys are generated for Pickpocket Skill Check
 
+    /** This method returns a boolean to signify if the current NPC is Bribable. */
     @Override
     public boolean isBribable(Player player) {
         // Navy NPCs only allow bribing if currently hostile towards this player
@@ -103,18 +111,9 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     public BribeState getBribeState(Player player) {
         return this.bribeState;
     }
-
     @Override
     public void setBribeState(BribeState state) {
         this.bribeState = state;
-    }
-
-
-    // Register key in defineSynchedData
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(PICKPOCKET_STATE, (byte) PickpocketState.CAN_PICKPOCKET.ordinal());
     }
 
     @Override
@@ -122,34 +121,17 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
         byte ordinal = this.entityData.get(PICKPOCKET_STATE);
         return PickpocketState.values()[ordinal];
     }
-
     @Override
     public void setPickpocketState(PickpocketState state) {
         this.entityData.set(PICKPOCKET_STATE, (byte) state.ordinal());
     }
 
-
-
+    // Register key in defineSynchedData
     @Override
-    public float getPickpocketChance(){ return 0.25F; } // 25% chance that Pickpocket attempt will trigger a Skill Check
-
-    @Override
-    public boolean requiresSkillCheck()
-    {
-        return true;
-    } // This NPC requires a Skill Check
-
-    @Override
-    public int getSkillCheckMaxTicks(){
-        return 100; // 5 seconds (20 ticks per second)
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PICKPOCKET_STATE, (byte) PickpocketState.CAN_PICKPOCKET.ordinal());
     }
-
-    @Override
-    public int getSkillCheckKeyCount() {
-        return 6;
-    } // 6 Keys are generated for Pickpocket Skill Check
-
-
 
     /**
      * Saves custom data to the NBT tag compound, including entity variants
