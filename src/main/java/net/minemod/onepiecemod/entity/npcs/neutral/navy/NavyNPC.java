@@ -14,11 +14,13 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minemod.onepiecemod.client.navy.NavyVariant;
+import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
 import net.minemod.onepiecemod.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,8 +36,14 @@ public class NavyNPC extends AbstractNavyNPC {
 
     /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
-    public NavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
-        super(type, pLevel);
+    public NavyNPC(EntityType<? extends PathfinderMob> type, Level level) {
+        // Uses standard default DifficultyBuilder
+        // super(type, level);
+
+        // Uses custom DifficultyBuilder settings:
+        super(type, level, new DifficultyBuilder()
+                // 15% chance, 3 sec timer (60 ticks), 4 keys required
+                .pickpocket(0.15f, true, 60, 4));
     }
 
     /**

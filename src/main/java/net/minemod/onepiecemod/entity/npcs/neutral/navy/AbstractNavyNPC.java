@@ -24,11 +24,14 @@ import net.minemod.onepiecemod.entity.interfaces.Bribable;
 import net.minemod.onepiecemod.entity.interfaces.Pickpocketable;
 import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
 import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
+import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
 
 public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable {
 
     /** TODO: refactor for DifficultyBuilder */
     /** Variables */
+    private final DifficultyBuilder difficulty;
+
     private final int DEFAULT_NAVY_BRIBE_COST = 5;
     private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.5f;
 
@@ -39,9 +42,17 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
             SynchedEntityData.defineId(AbstractNavyNPC.class, EntityDataSerializers.BYTE);
 
     /** TODO: refactor for DifficultyBuilder */
-    /** Constructor */
-    public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
-        super(type, pLevel);
+    /** Constructors */
+    // This constructor uses Custom Difficulty Settings
+    public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level level, DifficultyBuilder difficulty) {
+        super(type, level);
+        this.difficulty = difficulty;
+    }
+
+    // This constructor uses Default Difficulty Settings
+    public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level level)
+    {
+        this(type, level, new DifficultyBuilder());
     }
 
     @Override
@@ -69,6 +80,7 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     }
 
     /** TODO: Refactor for Difficulty Builder (Base Difficulty for NavyNPCs) */
+    // Bribe Methods
     @Override
     public Item getBribeItem() {
         return Items.EMERALD;
@@ -81,21 +93,12 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     public float getBribeChance() {
         return DEFAULT_NAVY_BRIBE_CHANCE;
     }
-    @Override
-    public float getPickpocketChance(){ return 0.25F; } // 25% chance that Pickpocket attempt will trigger a Skill Check
-    @Override
-    public boolean requiresSkillCheck()
-    {
-        return true;
-    } // This NPC requires a Skill Check
-    @Override
-    public int getSkillCheckMaxTicks(){
-        return 100; // 5 seconds (20 ticks per second)
-    }
-    @Override
-    public int getSkillCheckKeyCount() {
-        return 6;
-    } // 6 Keys are generated for Pickpocket Skill Check
+
+    // Pickpocket Methods
+    @Override public float getPickpocketChance() { return difficulty.pickpocketChance; }
+    @Override public boolean requiresSkillCheck() { return difficulty.requiresSkillCheck; }
+    @Override public int getSkillCheckMaxTicks() { return difficulty.skillCheckMaxTicks; }
+    @Override public int getSkillCheckKeyCount() { return difficulty.skillCheckKeyCount; }
 
     /** This method returns a boolean to signify if the current NPC is Bribable. */
     @Override
