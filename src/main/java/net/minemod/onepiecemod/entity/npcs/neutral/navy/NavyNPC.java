@@ -34,7 +34,6 @@ public class NavyNPC extends AbstractNavyNPC {
     private static final EntityDataAccessor<Integer> VARIANT =
             SynchedEntityData.defineId(NavyNPC.class, EntityDataSerializers.INT);
 
-    /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
     public NavyNPC(EntityType<? extends PathfinderMob> type, Level level) {
         // Uses standard default DifficultyBuilder
@@ -43,7 +42,8 @@ public class NavyNPC extends AbstractNavyNPC {
         // Uses custom DifficultyBuilder settings:
         super(type, level, new DifficultyBuilder()
                 // 15% chance, 3 sec timer (60 ticks), 4 keys required
-                .pickpocket(0.15f, true, 60, 4));
+                .pickpocket(0.15f, true, 60, 4)
+                .bribe(0.60f, Items.EMERALD, 5));
     }
 
     /**

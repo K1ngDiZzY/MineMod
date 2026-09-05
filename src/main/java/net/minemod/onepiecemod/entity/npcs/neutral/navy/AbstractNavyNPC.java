@@ -27,21 +27,13 @@ import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
 
 public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable {
-
-    /** TODO: refactor for DifficultyBuilder */
     /** Variables */
     private final DifficultyBuilder difficulty;
 
-    private final int DEFAULT_NAVY_BRIBE_COST = 5;
-    private final float DEFAULT_NAVY_BRIBE_CHANCE = 0.5f;
-
     private BribeState bribeState = BribeState.CAN_BRIBE;
-
-    // Define the data key
     private static final EntityDataAccessor<Byte> PICKPOCKET_STATE =
             SynchedEntityData.defineId(AbstractNavyNPC.class, EntityDataSerializers.BYTE);
 
-    /** TODO: refactor for DifficultyBuilder */
     /** Constructors */
     // This constructor uses Custom Difficulty Settings
     public AbstractNavyNPC(EntityType<? extends PathfinderMob> type, Level level, DifficultyBuilder difficulty) {
@@ -79,20 +71,10 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
         this.targetSelector.addGoal(3, new ResetUniversalAngerTargetGoal<>(this, false));
     }
 
-    /** TODO: Refactor for Difficulty Builder (Base Difficulty for NavyNPCs) */
     // Bribe Methods
-    @Override
-    public Item getBribeItem() {
-        return Items.EMERALD;
-    }
-    @Override
-    public int getBribeCost() {
-        return DEFAULT_NAVY_BRIBE_COST;
-    }
-    @Override
-    public float getBribeChance() {
-        return DEFAULT_NAVY_BRIBE_CHANCE;
-    }
+    @Override public float getBribeChance() { return difficulty.bribeChance; }
+    @Override public Item getBribeItem() { return difficulty.bribeItem; }
+    @Override public int getBribeCost() { return difficulty.bribeCost; }
 
     // Pickpocket Methods
     @Override public float getPickpocketChance() { return difficulty.pickpocketChance; }
@@ -101,6 +83,7 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     @Override public int getSkillCheckKeyCount() { return difficulty.skillCheckKeyCount; }
 
     /** This method returns a boolean to signify if the current NPC is Bribable. */
+    /** TODO: Change this to check Bribable state a different way instead of Hostility target. */
     @Override
     public boolean isBribable(Player player) {
         // Navy NPCs only allow bribing if currently hostile towards this player

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -30,7 +31,6 @@ public class PirateNPC extends AbstractPirateNPC {
     private static final EntityDataAccessor<Integer> VARIANT =
             SynchedEntityData.defineId(PirateNPC.class, EntityDataSerializers.INT);
 
-    /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
     public PirateNPC(EntityType<? extends PathfinderMob> type, Level level) {
         // Uses standard default DifficultyBuilder
@@ -39,7 +39,8 @@ public class PirateNPC extends AbstractPirateNPC {
         // Uses custom DifficultyBuilder
         super(type, level, new DifficultyBuilder()
                 // 75% chance, 10 sec timer (200 ticks), 8 keys required
-                .pickpocket(0.75f, true, 200, 8));
+                .pickpocket(0.75f, true, 200, 8)
+                .bribe(0.80f, Items.GOLD_INGOT, 2));
     }
 
     /**

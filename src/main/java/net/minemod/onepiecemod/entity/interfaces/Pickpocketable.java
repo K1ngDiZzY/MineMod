@@ -23,6 +23,10 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Interface handles the Pickpocket logic that will be implementable by any NPC.
+ * - NPCs can be Pickpocketed when Right-Clicking while sneaking. Some NPCs may require a Skill Check to Pickpocket.
+ */
 public interface Pickpocketable {
 
     /** States determining Pickpocket behavior and strike count */
@@ -41,13 +45,11 @@ public interface Pickpocketable {
     PickpocketState getPickpocketState(Player player); // Returns current Pickpocket state for a specific player.
     void setPickpocketState(PickpocketState state); // Sets the Pickpocket state on the entity implementation.
 
-    /** TODO: refactor for DifficultyBuilder */
     float getPickpocketChance(); // Base success chance between 0.0 (0%) and 1.0 (100%).
     boolean requiresSkillCheck(); // Determines if the NPC requires a Skill Check when attempting to Pickpocket.
     int getSkillCheckMaxTicks(); // Determines the Timeout Period of the Skill Check screen. (20 Ticks = 1 Second)
     int getSkillCheckKeyCount(); // Determines the total number of key presses required for the Skill Check
 
-    /** TODO: refactor for DifficultyBuilder */
     /** Pool of possible keys used for the Skill Check sequence. */
     record SkillCheckKey(int keyCode, String label) {} // Helper Struct to hold GLFW Keycode and matching UI label.
 

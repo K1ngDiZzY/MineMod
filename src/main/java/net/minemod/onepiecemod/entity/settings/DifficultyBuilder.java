@@ -1,9 +1,15 @@
 package net.minemod.onepiecemod.entity.settings;
 
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+
 public class DifficultyBuilder {
     // Create Variables with Default values
 
-    // - Bribeable
+    // - Default Bribable Difficulty Settings
+    public float bribeChance = 1.0f;
+    public Item bribeItem = Items.DIAMOND;
+    public int bribeCost = 1;
 
     // TODO
     // - Default Pickpocketable Difficulty Settings.
@@ -14,18 +20,25 @@ public class DifficultyBuilder {
 
 
     // Builder Methods
-
-    // - BribeDifficulty
-
-    // TODO
+    /**
+     * bribe()
+     * - Builder Method to handle an NPCs Bribe Settings
+     * - (Bribe Chance, Bribe Item, and Bribe Cost.
+     */
+    public DifficultyBuilder bribe(float bribeChance, Item bribeItem, int bribeCost) {
+        this.bribeChance = bribeChance;
+        this.bribeItem = bribeItem;
+        this.bribeCost = bribeCost;
+        return this;
+    }
 
     /**
      * pickpocket()
      * - Builder Method to handle an NPCs Pickpocket Settings
      * - (Pickpocket Chance, Tick count, Key Count, and whether a Skill Check is needed or not).
      */
-    public DifficultyBuilder pickpocket(float chance, boolean skillCheck, int maxTicks, int keyCount) {
-        this.pickpocketChance = chance;
+    public DifficultyBuilder pickpocket(float pickpocketChance, boolean skillCheck, int maxTicks, int keyCount) {
+        this.pickpocketChance = pickpocketChance;
         this.requiresSkillCheck = skillCheck;
         this.skillCheckMaxTicks = maxTicks;
         this.skillCheckKeyCount = keyCount;
