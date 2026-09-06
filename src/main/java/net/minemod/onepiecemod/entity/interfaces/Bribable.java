@@ -37,29 +37,12 @@ public interface Bribable {
         return getBribeState(player) != BribeState.FAILED_PERMANENT;
     }
 
-    /** Returns current Bribe state for a specific player. */
-    BribeState getBribeState(Player player);
+    BribeState getBribeState(Player player); // Returns current Bribe state for a specific player.
+    void setBribeState(BribeState state); // Sets the Bribe state on the entity implementation.
 
-    /** Sets the Bribe state on the entity implementation. */
-    void setBribeState(BribeState state);
-
-    /** TODO: refactor for DifficultyBuilder */
-    /** Item required to Bribe this entity. (Default is a Gold Ingot - Similar to a Piglin) */
-    default Item getBribeItem() {
-        return Items.GOLD_INGOT;
-    }
-
-    /** TODO: refactor for DifficultyBuilder */
-    /** Amount of the Bribe Item required per Bribe attempt. (Default is 1) */
-    default int getBribeCost() {
-        return 1;
-    }
-
-    /** TODO: refactor for DifficultyBuilder */
-    /** Chance that a Bribe Attempt will succeed between 0.0 (0%) and 1.0 (100%). (Default is 1.0) */
-    default float getBribeChance() {
-        return 1.0f;
-    }
+    float getBribeChance(); // Chance that a Bribe Attempt will succeed between 0.0 (0%) and 1.0 (100%). (Default is 1.0)
+    Item getBribeItem(); // Item required to Bribe this entity. (Default is a diamond)
+    int getBribeCost(); // Amount of the Bribe Item required per Bribe attempt. (Default is 1)
 
     /**
      * onBribeSuccess()
