@@ -81,6 +81,9 @@ public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Br
     @Override public int getSkillCheckMaxTicks() { return difficulty.skillCheckMaxTicks; }
     @Override public int getSkillCheckKeyCount() { return difficulty.skillCheckKeyCount; }
 
+    // Skill Check Key Pool
+    // TODO:
+
     /** This method returns a boolean to signify if the current NPC is Bribable. */
     /** TODO: Change this to check Bribable state a different way instead of Hostility target. */
     @Override

@@ -40,6 +40,7 @@ public class NavyNPC extends AbstractNavyNPC {
         // super(type, level);
 
         // Uses custom DifficultyBuilder settings:
+        // TODO: Skill Check Key Pool customization
         super(type, level, new DifficultyBuilder()
                 // 15% chance, 3 sec timer (60 ticks), 4 keys required
                 .pickpocket(0.15f, true, 60, 4)

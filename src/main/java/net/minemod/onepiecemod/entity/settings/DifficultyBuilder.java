@@ -22,6 +22,8 @@ public class DifficultyBuilder {
     public int skillCheckMaxTicks = 100;
     public int skillCheckKeyCount = 6;
 
+    // - TODO
+    // - Default Skill Check Key Pool
 
     // Builder Methods
     /**
@@ -40,6 +42,7 @@ public class DifficultyBuilder {
      * pickpocket()
      * - Builder Method to handle an NPCs Pickpocket Settings
      * - (Pickpocket Chance, Tick count, Key Count, and whether a Skill Check is needed or not).
+     * - (TODO: Add something for Skill Check Key Pool)
      */
     public DifficultyBuilder pickpocket(float pickpocketChance, boolean skillCheck, int maxTicks, int keyCount) {
         this.pickpocketChance = pickpocketChance;
