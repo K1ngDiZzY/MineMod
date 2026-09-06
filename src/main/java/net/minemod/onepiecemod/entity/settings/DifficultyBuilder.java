@@ -3,16 +3,20 @@ package net.minemod.onepiecemod.entity.settings;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
+/**
+ * DifficultyBuilder class
+ * - This class handles all the Difficulty Settings related to the Interfaces an NPC can implement.
+ * - (Bribable, Pickpocketable, Tradable, etc).
+ */
 public class DifficultyBuilder {
     // Create Variables with Default values
 
-    // - Default Bribable Difficulty Settings
+    // - Default Bribe Difficulty Settings
     public float bribeChance = 1.0f;
     public Item bribeItem = Items.DIAMOND;
     public int bribeCost = 1;
 
-    // TODO
-    // - Default Pickpocketable Difficulty Settings.
+    // - Default Pickpocket Difficulty Settings.
     public float pickpocketChance = 0.25f;
     public boolean requiresSkillCheck = true;
     public int skillCheckMaxTicks = 100;
@@ -23,7 +27,7 @@ public class DifficultyBuilder {
     /**
      * bribe()
      * - Builder Method to handle an NPCs Bribe Settings
-     * - (Bribe Chance, Bribe Item, and Bribe Cost.
+     * - (Bribe Chance, Bribe Item, and Bribe Cost).
      */
     public DifficultyBuilder bribe(float bribeChance, Item bribeItem, int bribeCost) {
         this.bribeChance = bribeChance;

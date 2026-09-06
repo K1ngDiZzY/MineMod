@@ -51,6 +51,7 @@ public interface Pickpocketable {
     int getSkillCheckKeyCount(); // Determines the total number of key presses required for the Skill Check
 
     /** Pool of possible keys used for the Skill Check sequence. */
+    /** TODO: Make this customizable */
     record SkillCheckKey(int keyCode, String label) {} // Helper Struct to hold GLFW Keycode and matching UI label.
 
     List<SkillCheckKey> SKILL_CHECK_KEY_POOL = List.of(
@@ -62,9 +63,10 @@ public interface Pickpocketable {
 
     /**
      * TODO: Should this be here, or in the SkillCheck method?
-     * @param random
-     * @param count
-     * @return
+     * generateSkillCheckSequence()
+     * - This method is called when a SkillCheck Sequence is required.
+     * - (Generates a random sequence of keys in SKILL_CHECK_KEY_POOL, of length @param count).
+     * - (Note: This sequence can have repeating values).
      */
     default List<SkillCheckKey> generateSkillCheckSequence(RandomSource random, int count) {
         List<SkillCheckKey> sequence = new ArrayList<>();
@@ -76,9 +78,9 @@ public interface Pickpocketable {
     }
 
     /**
-     * Opens the NPC's inventory UI for the interacting player.
-     * @param player
-     * @param mob
+     * openPickpocketMenu()
+     * - Opens the NPC's inventory UI for the interacting player.
+     * - (Can instead access a "custom" inventory, only certain slots of an NPCs inventory, etc...).
      */
     default void openPickpocketMenu(Player player, PathfinderMob mob) {
         if (mob instanceof AbstractNPC abstractNPC) {
@@ -107,9 +109,11 @@ public interface Pickpocketable {
     }
 
     /**
-     *
-     * @param player
-     * @param mob
+     * onPickpocketSuccess()
+     * - Called when a Pickpocket attempt is Successful.
+     * - 1: Call openPickpocketMenu
+     * - 2: Visual Effects
+     * - 3: Audio Effects
      */
     default void onPickpocketSuccess(Player player, PathfinderMob mob) {
         // Reset strike state on successful pickpocket
@@ -139,9 +143,13 @@ public interface Pickpocketable {
     }
 
     /**
-     *
-     * @param player
-     * @param mob
+     * onPickpocketFailed()
+     * - Called when a Pickpocket attempt is Unsuccessful.
+     * - 1: Advance the NPCs Strike State.
+     * - 2: Make Neutral mobs Hostile towards the Player.
+     * - 3: Visual Effects.
+     * - 4: Audio Effects.
+     * - 5: Warning Message displayed.
      */
     default void onPickpocketFailed(Player player, PathfinderMob mob) {
         if (mob.level() instanceof ServerLevel serverLevel) {
@@ -195,18 +203,21 @@ public interface Pickpocketable {
 
 
     /**
-     *
-     * @param mob
-     * @param player
-     * @param hand
-     * @return
+     * processPickpocket()
+     * - This method is called whenever an NPC is Right-Clicked by a Player holding the Shift key (Sneaking).
+     * - 1: Check Pickpocket State: return early if state is FAILED_PERMANENT.
+     * - 2: Check Pickpocket Chance: call onPickpocketFailed if chance roll fails.
+     * - 3: Skill Check NOT required: call onPickpocketSuccess.
+     * - 4: Skill Check IS required: call generateSkillCheckSequence.
+     * - 5: Launch Skill check: create a PickpocketSkillCheckScreen object.
      */
     default InteractionResult processPickpocket(PathfinderMob mob, Player player, InteractionHand hand) {
 
         // Refactored processPickpocket() method
         if (!mob.level().isClientSide()) {
 
-            // Check state before proceeding
+            // 1: Check state before proceeding.
+            //TODO: Maybe should be refactored. This method should not be called if NPC is FAILED_PERMANENT
             if (!isPickpocketable(player)) {
                 player.displayClientMessage(
                         Component.translatable("%s is watching you closely and cannot be pickpocketed!", mob.getDisplayName())
@@ -216,17 +227,19 @@ public interface Pickpocketable {
                 return InteractionResult.FAIL;
             }
 
-            // Pickpocket Chance check
+            // 2: Pickpocket Chance check.
             if(mob.getRandom().nextFloat() > getPickpocketChance()) {
                 onPickpocketFailed(player, mob);
                 return InteractionResult.FAIL;
             }
 
-            // If the NPC does not require a Skill Check
+            // 3: If the NPC does not require a Skill Check.
             if(!this.requiresSkillCheck()){
                 onPickpocketSuccess(player, mob);
                 return InteractionResult.PASS;
             }
+
+            // 4: NPC requires a Skill Check. Get Sequence Length, Timer, and Key Codes.
             else {
                 int keyCount = getSkillCheckKeyCount();
                 int maxTicks = getSkillCheckMaxTicks();
@@ -237,6 +250,7 @@ public interface Pickpocketable {
                 List<String> labels = sequence.stream().map(SkillCheckKey::label).toList();
 
 
+                // 5: Launch the Skill Check screen.
                 net.minecraft.client.Minecraft.getInstance().setScreen(
                         new PickpocketSkillCheckScreen(mob, keyCodes, labels, maxTicks)
                 );

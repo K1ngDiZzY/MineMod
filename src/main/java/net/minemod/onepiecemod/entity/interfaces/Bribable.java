@@ -158,7 +158,7 @@ public interface Bribable {
 
     /**
      * processBribe()
-     * - 1: TODO: DifficultyBuilder Check. If failed: call onBribeFailed().
+     * - 1: DifficultyBuilder Check. If failed: call onBribeFailed().
      * - 2: Check BribeState. If failed: call onBribeFailed()
      * - 3: Call onBribeSuccess() if all conditions are met.
      */
