@@ -26,6 +26,8 @@ import net.minemod.onepiecemod.entity.npcs.neutral.navy.NavyNPC;
 import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
 import net.minemod.onepiecemod.item.ModItems;
 
+import java.util.List;
+
 public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable {
     /** Variables */
     private final DifficultyBuilder difficulty;
@@ -82,7 +84,7 @@ public abstract class AbstractPirateNPC extends AbstractNeutralNPC implements Br
     @Override public int getSkillCheckKeyCount() { return difficulty.skillCheckKeyCount; }
 
     // Skill Check Key Pool
-    // TODO:
+    @Override public List<SkillCheckKey> getSkillCheckKeyPool() { return difficulty.skillCheckKeyPool; }
 
     /** This method returns a boolean to signify if the current NPC is Bribable. */
     /** TODO: Change this to check Bribable state a different way instead of Hostility target. */
