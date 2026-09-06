@@ -17,6 +17,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minemod.onepiecemod.client.pirate.PirateVariant;
+import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,8 +32,14 @@ public class PirateNPC extends AbstractPirateNPC {
 
     /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
-    public PirateNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
-        super(type, pLevel);
+    public PirateNPC(EntityType<? extends PathfinderMob> type, Level level) {
+        // Uses standard default DifficultyBuilder
+        // super(type, level);
+
+        // Uses custom DifficultyBuilder
+        super(type, level, new DifficultyBuilder()
+                // 75% chance, 10 sec timer (200 ticks), 8 keys required
+                .pickpocket(0.75f, true, 200, 8));
     }
 
     /**
