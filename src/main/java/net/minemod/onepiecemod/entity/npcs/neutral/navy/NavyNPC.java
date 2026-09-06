@@ -32,6 +32,7 @@ public class NavyNPC extends AbstractNavyNPC {
     private static final EntityDataAccessor<Integer> VARIANT =
             SynchedEntityData.defineId(NavyNPC.class, EntityDataSerializers.INT);
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
     public NavyNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);

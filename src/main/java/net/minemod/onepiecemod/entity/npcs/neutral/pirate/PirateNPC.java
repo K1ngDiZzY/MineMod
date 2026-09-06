@@ -29,6 +29,7 @@ public class PirateNPC extends AbstractPirateNPC {
     private static final EntityDataAccessor<Integer> VARIANT =
             SynchedEntityData.defineId(PirateNPC.class, EntityDataSerializers.INT);
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Constructor */
     public PirateNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);

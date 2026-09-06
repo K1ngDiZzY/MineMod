@@ -32,11 +32,7 @@ public interface Bribable {
         FAILED_PERMANENT
     }
 
-    /**
-     * Master tag to determine if this entity is currently bribable.
-     * - Can be turned on or off based on external conditions
-     * - (Example: If the player is "Wanted" then a NavyCaptainNPC's "isBribable" tag would be "false.)
-     */
+    /** Master tag to determine if this entity is currently bribable. */
     default boolean isBribable(Player player) {
         return getBribeState(player) != BribeState.FAILED_PERMANENT;
     }
@@ -47,21 +43,32 @@ public interface Bribable {
     /** Sets the Bribe state on the entity implementation. */
     void setBribeState(BribeState state);
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Item required to Bribe this entity. (Default is a Gold Ingot - Similar to a Piglin) */
     default Item getBribeItem() {
         return Items.GOLD_INGOT;
     }
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Amount of the Bribe Item required per Bribe attempt. (Default is 1) */
     default int getBribeCost() {
         return 1;
     }
 
+    /** TODO: refactor for DifficultyBuilder */
     /** Chance that a Bribe Attempt will succeed between 0.0 (0%) and 1.0 (100%). (Default is 1.0) */
     default float getBribeChance() {
         return 1.0f;
     }
 
+    /**
+     * onBribeSuccess()
+     * - This method is called when the current Bribe Attempt succeeds.
+     * - 1: Pacification Logic: Removes the NPCs Aggressive state, and resets the BribeState to CAN_BRIBE
+     * - 2: Visual Effects: Triggers Particle Visual Effects to indicate a successful Bribe Attempt.
+     * - 3: Audio Effects: Triggers an Audio Sound Effect when the Bribe Attempt is successful.
+     * - 4: Success Message: Displays a message to the client to provide feedback to the player.
+     */
     default void onBribeSuccess(Player player, PathfinderMob mob) {
         // Reset strike count back to default state upon successful bribe
         setBribeState(BribeState.CAN_BRIBE);
@@ -107,10 +114,18 @@ public interface Bribable {
         }
     }
 
+    /**
+     * onBribeFailed()
+     * - This method is called when the current Bribe Attempt fails.
+     * - 1: Strike Advancement Logic: Determines the NPCs current BribeState, and sets the correct next BribeState.
+     * - 2: Visual Effects: Triggers Particle Visual Effects to indicate an unsuccessful Bribe Attempt.
+     * - 3: Audio Effects: Triggers an Audio Sound Effect when the Bribe Attempt is unsuccessful.
+     * - 4: Failure Message: Displays a message to the client to provide feedback to the player.
+     */
     default void onBribeFailed(Player player, PathfinderMob mob) {
         if (mob.level() instanceof ServerLevel serverLevel) {
 
-            // Calculate next strike state
+            // 1: Calculate next strike state
             BribeState currentState = getBribeState(player);
             BribeState nextState;
 
@@ -158,6 +173,12 @@ public interface Bribable {
         }
     }
 
+    /**
+     * processBribe()
+     * - 1: TODO: DifficultyBuilder Check. If failed: call onBribeFailed().
+     * - 2: Check BribeState. If failed: call onBribeFailed()
+     * - 3: Call onBribeSuccess() if all conditions are met.
+     */
     default InteractionResult processBribe(PathfinderMob mob, Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
 

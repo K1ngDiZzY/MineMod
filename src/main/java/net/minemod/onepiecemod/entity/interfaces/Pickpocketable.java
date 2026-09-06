@@ -38,73 +38,19 @@ public interface Pickpocketable {
         return getPickpocketState(player) != PickpocketState.FAILED_PERMANENT;
     }
 
-    /** Returns current Pickpocket state for a specific player. */
-    PickpocketState getPickpocketState(Player player);
+    PickpocketState getPickpocketState(Player player); // Returns current Pickpocket state for a specific player.
+    void setPickpocketState(PickpocketState state); // Sets the Pickpocket state on the entity implementation.
 
-    /** Sets the Pickpocket state on the entity implementation. */
-    void setPickpocketState(PickpocketState state);
+    /** TODO: refactor for DifficultyBuilder */
+    float getPickpocketChance(); // Base success chance between 0.0 (0%) and 1.0 (100%).
+    boolean requiresSkillCheck(); // Determines if the NPC requires a Skill Check when attempting to Pickpocket.
+    int getSkillCheckMaxTicks(); // Determines the Timeout Period of the Skill Check screen. (20 Ticks = 1 Second)
+    int getSkillCheckKeyCount(); // Determines the total number of key presses required for the Skill Check
 
-    /** Base success chance between 0.0 (0%) and 1.0 (100%). */
-    float getPickpocketChance();
-
-    /** Determines if the NPC requires a Skill Check when attempting to Pickpocket. */
-    boolean requiresSkillCheck();
-
-    /** Determines the Timeout Period of the Skill Check screen. Default is 5 seconds (1 second   */
-    int getSkillCheckMaxTicks();
-
-    /** Determines the total number of key presses required for the Skill Check */
-    int getSkillCheckKeyCount();
-
-    default InteractionResult processPickpocket(PathfinderMob mob, Player player, InteractionHand hand) {
-
-        // Refactored processPickpocket() method
-        if (!mob.level().isClientSide()) {
-
-            // Check state before proceeding
-            if (!isPickpocketable(player)) {
-                player.displayClientMessage(
-                        Component.translatable("%s is watching you closely and cannot be pickpocketed!", mob.getDisplayName())
-                                .withStyle(ChatFormatting.RED),
-                        true
-                );
-                return InteractionResult.FAIL;
-            }
-
-            // Pickpocket Chance check
-            if(mob.getRandom().nextFloat() > getPickpocketChance()) {
-                onPickpocketFailed(player, mob);
-                return InteractionResult.FAIL;
-            }
-
-            // If the NPC does not require a Skill Check
-            if(!this.requiresSkillCheck()){
-                onPickpocketSuccess(player, mob);
-                return InteractionResult.PASS;
-            }
-            else {
-                int keyCount = getSkillCheckKeyCount();
-                int maxTicks = getSkillCheckMaxTicks();
-                List<SkillCheckKey> sequence = generateSkillCheckSequence(mob.getRandom(), keyCount);
-
-                // Extract GKFW keycodes and labels for the screen
-                List<Integer> keyCodes = sequence.stream().map(SkillCheckKey::keyCode).toList();
-                List<String> labels = sequence.stream().map(SkillCheckKey::label).toList();
-
-
-                net.minecraft.client.Minecraft.getInstance().setScreen(
-                        new PickpocketSkillCheckScreen(mob, keyCodes, labels, maxTicks)
-                );
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
-
-    /** Helper Struct to hold GLFW Keycode and matching UI label. */
-    record SkillCheckKey(int keyCode, String label) {}
-
-    /** TODO Make list of possible keys customizable. */
+    /** TODO: refactor for DifficultyBuilder */
     /** Pool of possible keys used for the Skill Check sequence. */
+    record SkillCheckKey(int keyCode, String label) {} // Helper Struct to hold GLFW Keycode and matching UI label.
+
     List<SkillCheckKey> SKILL_CHECK_KEY_POOL = List.of(
             new SkillCheckKey(GLFW.GLFW_KEY_W, "W"),
             new SkillCheckKey(GLFW.GLFW_KEY_A, "A"),
@@ -112,6 +58,12 @@ public interface Pickpocketable {
             new SkillCheckKey(GLFW.GLFW_KEY_D, "D")
     );
 
+    /**
+     * TODO: Should this be here, or in the SkillCheck method?
+     * @param random
+     * @param count
+     * @return
+     */
     default List<SkillCheckKey> generateSkillCheckSequence(RandomSource random, int count) {
         List<SkillCheckKey> sequence = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -120,8 +72,11 @@ public interface Pickpocketable {
         }
         return sequence;
     }
+
     /**
      * Opens the NPC's inventory UI for the interacting player.
+     * @param player
+     * @param mob
      */
     default void openPickpocketMenu(Player player, PathfinderMob mob) {
         if (mob instanceof AbstractNPC abstractNPC) {
@@ -149,6 +104,11 @@ public interface Pickpocketable {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param mob
+     */
     default void onPickpocketSuccess(Player player, PathfinderMob mob) {
         // Reset strike state on successful pickpocket
         setPickpocketState(PickpocketState.CAN_PICKPOCKET);
@@ -176,6 +136,11 @@ public interface Pickpocketable {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param mob
+     */
     default void onPickpocketFailed(Player player, PathfinderMob mob) {
         if (mob.level() instanceof ServerLevel serverLevel) {
 
@@ -224,6 +189,58 @@ public interface Pickpocketable {
 
             player.displayClientMessage(message, true);
         }
+    }
+
+
+    /**
+     *
+     * @param mob
+     * @param player
+     * @param hand
+     * @return
+     */
+    default InteractionResult processPickpocket(PathfinderMob mob, Player player, InteractionHand hand) {
+
+        // Refactored processPickpocket() method
+        if (!mob.level().isClientSide()) {
+
+            // Check state before proceeding
+            if (!isPickpocketable(player)) {
+                player.displayClientMessage(
+                        Component.translatable("%s is watching you closely and cannot be pickpocketed!", mob.getDisplayName())
+                                .withStyle(ChatFormatting.RED),
+                        true
+                );
+                return InteractionResult.FAIL;
+            }
+
+            // Pickpocket Chance check
+            if(mob.getRandom().nextFloat() > getPickpocketChance()) {
+                onPickpocketFailed(player, mob);
+                return InteractionResult.FAIL;
+            }
+
+            // If the NPC does not require a Skill Check
+            if(!this.requiresSkillCheck()){
+                onPickpocketSuccess(player, mob);
+                return InteractionResult.PASS;
+            }
+            else {
+                int keyCount = getSkillCheckKeyCount();
+                int maxTicks = getSkillCheckMaxTicks();
+                List<SkillCheckKey> sequence = generateSkillCheckSequence(mob.getRandom(), keyCount);
+
+                // Extract GKFW keycodes and labels for the screen
+                List<Integer> keyCodes = sequence.stream().map(SkillCheckKey::keyCode).toList();
+                List<String> labels = sequence.stream().map(SkillCheckKey::label).toList();
+
+
+                net.minecraft.client.Minecraft.getInstance().setScreen(
+                        new PickpocketSkillCheckScreen(mob, keyCodes, labels, maxTicks)
+                );
+            }
+        }
+        return InteractionResult.SUCCESS;
     }
 
 }
