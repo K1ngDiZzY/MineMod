@@ -41,9 +41,12 @@ public class NavyNPC extends AbstractNavyNPC {
 
         // Uses custom DifficultyBuilder settings:
         super(type, level, new DifficultyBuilder()
-                // 15% chance, 3 sec timer (60 ticks), 4 keys required
+                // Bribe Settings
+                .bribe(0.60f, Items.EMERALD, 5)
+
+                // Pickpocket Settings
                 .pickpocket(0.15f, true, 60, 4)
-                .bribe(0.60f, Items.EMERALD, 5));
+                .keyPool("QWEASD"));
     }
 
     /**

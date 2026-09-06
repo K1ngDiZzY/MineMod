@@ -38,9 +38,12 @@ public class PirateNPC extends AbstractPirateNPC {
 
         // Uses custom DifficultyBuilder
         super(type, level, new DifficultyBuilder()
-                // 75% chance, 10 sec timer (200 ticks), 8 keys required
+                // Bribe Settings
+                .bribe(0.80f, Items.GOLD_INGOT, 2)
+
+                // Pickpocket Settings
                 .pickpocket(0.75f, true, 200, 8)
-                .bribe(0.80f, Items.GOLD_INGOT, 2));
+                .keyPool("ASD"));
     }
 
     /**

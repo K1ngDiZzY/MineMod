@@ -37,6 +37,8 @@ public interface Pickpocketable {
         FAILED_PERMANENT
     }
 
+    record SkillCheckKey(int keyCode, String label) {} // Helper Struct to hold GLFW Keycode and matching UI label.
+
     /** Master check determining if an entity can currently be pickpocketed by a player. */
     default boolean isPickpocketable(Player player) {
         return getPickpocketState(player) != PickpocketState.FAILED_PERMANENT;
@@ -50,29 +52,23 @@ public interface Pickpocketable {
     int getSkillCheckMaxTicks(); // Determines the Timeout Period of the Skill Check screen. (20 Ticks = 1 Second)
     int getSkillCheckKeyCount(); // Determines the total number of key presses required for the Skill Check
 
-    /** Pool of possible keys used for the Skill Check sequence. */
-    /** TODO: Make this customizable */
-    record SkillCheckKey(int keyCode, String label) {} // Helper Struct to hold GLFW Keycode and matching UI label.
-
-    List<SkillCheckKey> SKILL_CHECK_KEY_POOL = List.of(
-            new SkillCheckKey(GLFW.GLFW_KEY_W, "W"),
-            new SkillCheckKey(GLFW.GLFW_KEY_A, "A"),
-            new SkillCheckKey(GLFW.GLFW_KEY_S, "S"),
-            new SkillCheckKey(GLFW.GLFW_KEY_D, "D")
-    );
+    List<SkillCheckKey> getSkillCheckKeyPool(); // Determines valid Keys to be added to the Skill Check Key Sequence
 
     /**
      * TODO: Should this be here, or in the SkillCheck method?
+     * TODO: Change SKILL_CHECK_KEY_POOL to be a parameter passed with the KeyCount
      * generateSkillCheckSequence()
      * - This method is called when a SkillCheck Sequence is required.
      * - (Generates a random sequence of keys in SKILL_CHECK_KEY_POOL, of length @param count).
      * - (Note: This sequence can have repeating values).
      */
     default List<SkillCheckKey> generateSkillCheckSequence(RandomSource random, int count) {
+        List<SkillCheckKey> keyPool = getSkillCheckKeyPool();
         List<SkillCheckKey> sequence = new ArrayList<>();
+
         for (int i = 0; i < count; i++) {
             // Picking a random element allows repeats (e.g., W, A, W, S or D, D, S, A)
-            sequence.add(SKILL_CHECK_KEY_POOL.get(random.nextInt(SKILL_CHECK_KEY_POOL.size())));
+            sequence.add(keyPool.get(random.nextInt(keyPool.size())));
         }
         return sequence;
     }
