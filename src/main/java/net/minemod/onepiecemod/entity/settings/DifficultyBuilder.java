@@ -3,6 +3,8 @@ package net.minemod.onepiecemod.entity.settings;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minemod.onepiecemod.entity.interfaces.Pickpocketable;
+import net.minemod.onepiecemod.entity.trade.Trade;
+import net.minemod.onepiecemod.entity.trade.TradeBuilder;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -34,6 +36,10 @@ public class DifficultyBuilder {
             new Pickpocketable.SkillCheckKey(GLFW.GLFW_KEY_S, "S"),
             new Pickpocketable.SkillCheckKey(GLFW.GLFW_KEY_D, "D")
     );
+
+    // - Empty List for Trade objects.
+    public List<Trade> trades = new ArrayList<>();
+
 
     // Builder Methods
     /**
@@ -101,4 +107,15 @@ public class DifficultyBuilder {
 
         return this;
     }
+
+    /**
+     * trades()
+     * - Builder Method to handle an NPC's customizable Trades utilizing the TradeBuilder class.
+     * - Can set Trade Cost, Trade Results, max number of Trades, and XP Rewards
+     */
+    public DifficultyBuilder trades(TradeBuilder tradeBuilder) {
+        this.trades = tradeBuilder.build();
+        return this;
+    }
+
 }
