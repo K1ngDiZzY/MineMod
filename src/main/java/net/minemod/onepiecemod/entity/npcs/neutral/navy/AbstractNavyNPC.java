@@ -22,13 +22,15 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minemod.onepiecemod.datagen.ModLootProvider;
 import net.minemod.onepiecemod.entity.interfaces.Bribable;
 import net.minemod.onepiecemod.entity.interfaces.Pickpocketable;
+import net.minemod.onepiecemod.entity.interfaces.Tradable;
 import net.minemod.onepiecemod.entity.npcs.neutral.AbstractNeutralNPC;
 import net.minemod.onepiecemod.entity.npcs.neutral.pirate.PirateNPC;
 import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
+import net.minemod.onepiecemod.entity.trade.Trade;
 
 import java.util.List;
 
-public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable {
+public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Bribable, Pickpocketable, Tradable {
     /** Variables */
     private final DifficultyBuilder difficulty;
 
@@ -84,8 +86,11 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
     @Override public int getSkillCheckMaxTicks() { return difficulty.skillCheckMaxTicks; }
     @Override public int getSkillCheckKeyCount() { return difficulty.skillCheckKeyCount; }
 
-    // Skill Check Key Pool
+    // Skill Check Key Pool - Get Method
     @Override public List<SkillCheckKey> getSkillCheckKeyPool() { return difficulty.skillCheckKeyPool; }
+
+    // Trade List - Get Method
+    @Override public List<Trade> getTrades() { return this.difficulty.trades; }
 
     /** This method returns a boolean to signify if the current NPC is Bribable. */
     /** TODO: Change this to check Bribable state a different way instead of Hostility target. */
@@ -164,8 +169,10 @@ public abstract class AbstractNavyNPC extends AbstractNeutralNPC implements Brib
             return this.processPickpocket(this, player, hand);
         }
 
-        // 3. Add future interactions here cleanly (e.g. Trading, etc)
-
+        // 3. Process Trade Interaction
+        if (this.isTradable(player)) {
+            return this.processTrade(this, player, hand);
+        }
         return super.mobInteract(player, hand);
     }
 

@@ -2,6 +2,8 @@ package net.minemod.onepiecemod.entity.npcs;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
@@ -14,6 +16,9 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.Merchant;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
@@ -32,16 +37,89 @@ import java.util.Objects;
  * - Any global behavior should go here. Implements "PathfinderMob" to allow pathfinding for NPCs.
  * - (Example: Devil Fruit checks, Inventory declaration, Trade/Bribe/Pickpocket mechanics, etc.)
  */
-public abstract class AbstractNPC extends PathfinderMob {
+public abstract class AbstractNPC extends PathfinderMob implements Merchant {
 
     /** Variables */
     protected static final int DEFAULT_INVENTORY_SIZE = 9;
     protected SimpleContainer inventory;
 
+    @Nullable
+    private Player tradingPlayer;
+    @Nullable
+    protected MerchantOffers offers;
+
     /** Constructor */
     public AbstractNPC(EntityType<? extends PathfinderMob> type, Level pLevel) {
         super(type, pLevel);
         this.inventory = new SimpleContainer(this.getInventorySize());
+    }
+
+    /** Merchant Interface Implementation */
+
+    @Override
+    public void setTradingPlayer(@Nullable Player player) {
+        this.tradingPlayer = player;
+    }
+
+    @Override
+    public @Nullable Player getTradingPlayer() {
+        return this.tradingPlayer;
+    }
+
+    @Override
+    public MerchantOffers getOffers() {
+        if (this.offers == null) {
+            this.offers = new MerchantOffers();
+        }
+        return this.offers; // MUST return this.offers, NOT a new MerchantOffers()!
+    }
+
+    @Override
+    public void overrideOffers(MerchantOffers offers) {
+        this.offers = offers;
+    }
+
+    @Override
+    public void notifyTrade(MerchantOffer offer) {
+        offer.increaseUses();
+        this.playSound(SoundEvents.VILLAGER_YES, this.getSoundVolume(), this.getVoicePitch());
+    }
+
+    @Override
+    public void notifyTradeUpdated(ItemStack stack) {}
+
+    @Override
+    public int getVillagerXp() {
+        return 0;
+    }
+
+    @Override
+    public void overrideXp(int xp) {}
+
+    @Override
+    public boolean showProgressBar() {
+        return false;
+    }
+
+    @Override
+    public SoundEvent getNotifyTradeSound() {
+        return SoundEvents.VILLAGER_YES;
+    }
+
+    @Override
+    public boolean canRestock() {
+        return true;
+    }
+
+    @Override
+    public boolean isClientSide() {
+        return this.level().isClientSide();
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return this.isAlive()
+                && this.distanceToSqr(player) <= 64.0D; // 8 blocks distance check
     }
 
     /**

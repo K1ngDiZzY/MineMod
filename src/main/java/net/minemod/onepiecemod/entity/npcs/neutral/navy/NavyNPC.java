@@ -13,6 +13,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minemod.onepiecemod.client.navy.NavyVariant;
 import net.minemod.onepiecemod.entity.settings.DifficultyBuilder;
+import net.minemod.onepiecemod.entity.trade.TradeBuilder;
 import net.minemod.onepiecemod.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +48,15 @@ public class NavyNPC extends AbstractNavyNPC {
 
                 // Pickpocket Settings
                 .pickpocket(0.15f, true, 60, 4)
-                .keyPool("QWEASD"));
+                .keyPool("QWEASD")
+
+                // Trade Settings
+                .trades(TradeBuilder.create()
+                        .addTrade(ModItems.BERRY.get(), 10, Items.BREAD, 2)
+                        .addTrade(ModItems.BERRY.get(), 64, Items.IRON_SWORD, 1)
+                        .addTrade(ModItems.BERRY.get(), 32, Items.IRON_INGOT, 2, Items.CHAINMAIL_BOOTS, 1)
+                )
+        );
     }
 
     /**
